@@ -6,8 +6,11 @@ The user will be able to add cars to favorites by selecting and adding their fav
 
 All data is retrieved from an endpoint, processed with Javascript for pagination and filters and all design is optimized using TailwindCSS.
 
-It looks something like this :)
-![image](https://user-images.githubusercontent.com/49875535/228351782-c8709bcc-b1d8-45fd-ad01-b6d0cc7eb53b.png)
+It looks something like this:
+
+Web view | Mobile view 
+--- | --- 
+![image](https://user-images.githubusercontent.com/49875535/228351782-c8709bcc-b1d8-45fd-ad01-b6d0cc7eb53b.png) | ![image](https://user-images.githubusercontent.com/49875535/228359383-b34bb9e4-45e9-42bd-878d-de312f4cd40a.png)
 
 
 ## Get the project running
