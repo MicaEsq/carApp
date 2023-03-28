@@ -1,4 +1,4 @@
-Car Catalogue project
+# Car Catalogue project
 
 The car catalogue project is a web-based responsive application developed using Next.js, TailwindCSS and Javascript.The primary objective of the project is to provide users with a comprehensive list of available cars for purchase. The application has a user-frendly interface that allows users to filter cars based on various criteria such as brand, model, year of manufacture and more.
 
