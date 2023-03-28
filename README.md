@@ -6,6 +6,10 @@ The user will be able to add cars to favorites by selecting and adding their fav
 
 All data is retrieved from an endpoint, processed with Javascript for pagination and filters and all design is optimized using TailwindCSS.
 
+It looks something like this :)
+![image](https://user-images.githubusercontent.com/49875535/228351521-fc7cf8d1-5475-4d99-b81f-c98eb5eb8a70.png)
+
+
 ## Get the project running
 
 First, clone or download the repository: https://github.com/MicaEsq/carApp.git
