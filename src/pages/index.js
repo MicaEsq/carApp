@@ -1,32 +1,12 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { Inter } from 'next/font/google'
 import { useState, useEffect } from 'react'
 import CardCuadricula from 'i/components/CardCuadricula'
 import CardHorizontal from 'i/components/CardHorizontal'
 import Filters from 'i/components/Filters';
 import Badge from 'i/components/Badge';
 import $ from 'jquery';
-
-
-
-/* // This function gets called at build time on server-side.
-// It won't be called on client-side, so you can even do
-// direct database queries.
-export async function getStaticProps() {
-  // Call an external API endpoint to get posts.
-  // You can use any data fetching library
-  const res = await fetch('https://mocki.io/v1/ddc770fd-1346-438e-a15f-cf8767577b9e')
-  const items = await res.json()
-
-  // By returning { props: { posts } }, the Blog component
-  // will receive `posts` as a prop at build time
-  return {
-    props: {
-      items,
-    },
-  }
-} */
+import Pagination from 'i/components/Pagination'
 
 function formattFilters(items){
   var filters = {};
@@ -48,23 +28,61 @@ function formattFilters(items){
   return filters
 }
 
-function getFilteredData(items, setDataFiltered, filtersApplied, setTotalItems){
+function getFilteredData(items, setDataFiltered, filtersApplied, setTotalItems, setDataPaginated){
   const filteredArray = items.filter(item => filtersApplied.every(filter => item[filter.label] === filter.value))
   setDataFiltered(filteredArray);
+  setDataPaginated(filteredArray.slice(0, 12));
   setTotalItems(filteredArray.length);
+}
+
+function getCards(layout, dataPaginated, favorites, setFavorites){
+  if(dataPaginated.length !== 0){
+    if(layout === "grid"){
+      return <div className="grid grid-cols-2 md:grid-cols-3 gap-5" data-testid="cars-list">
+                  {dataPaginated.map((e) => {
+                    return <CardCuadricula key={e.id} product={e} favorites={favorites} setFavorites={setFavorites}/>;
+                  })}
+        </div>
+    }
+    else{
+      return <div className="flex flex-col" data-testid="cars-list"> 
+                  {dataPaginated.map((e) => {
+                    return <><CardHorizontal key={e.id} product={e} favorites={favorites} setFavorites={setFavorites}/><hr className="w-full"/></>;
+                  })}
+        </div>
+    }
+  }
+  else{
+    return <div className="flex justify-center mt-5">
+      <div className="flex flex-col items-center">
+          <img
+                src={'images/carNotFound.png'}
+                className="rounded-lg relative z-1"
+                height={"30%"}
+                width={"30%"}
+                alt={""}
+                title={""}
+                />
+          <p className="text-[#1B2141]">No hemos encontrado resultados para tu búsqueda...</p>
+          <p className="text-[#1B2141]">Cualquier inquietud, no dudes en contactarnos :)</p>
+      </div>
+    </div>
+  }
+  
 }
 
 
 function CarsView() {
 
-  const [data, setData] = useState(null)
-  const [isLoading, setLoading] = useState(false)
+  const [data, setData] = useState(null);
+  const [isLoading, setLoading] = useState(false);
   const [layout, setLayout] = useState("grid");
   const [totalItems, setTotalItems] = useState(0);
-  const [filtersApplied, setFiltersApplied] = useState(new Array)
+  const [filtersApplied, setFiltersApplied] = useState(new Array);
   const [dataFiltered, setDataFiltered] = useState(data);
   const [modifiedFilter, setModifiedFilter] = useState(false);
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState(new Array);
+  const [dataPaginated, setDataPaginated] = useState(new Array);
 
   useEffect(() => {
     setLoading(true)
@@ -73,7 +91,7 @@ function CarsView() {
       .then((data) => {
         setData(data)
         setTotalItems(Object.keys(data.items).length)
-        getFilteredData(data.items, setDataFiltered, filtersApplied, setTotalItems);
+        getFilteredData(data.items, setDataFiltered, filtersApplied, setTotalItems, setDataPaginated);
         setLoading(false)
       })
   }, [])
@@ -84,18 +102,21 @@ function CarsView() {
         if(windowSize >= 768){
           setLayout("grid")
         }
+        else{
+          setLayout("list");
+        }
     });    
   })
 
   useEffect(() => {
       if(modifiedFilter){
-        getFilteredData(data.items, setDataFiltered, filtersApplied, setTotalItems);
+        getFilteredData(data.items, setDataFiltered, filtersApplied, setTotalItems, setDataPaginated);
         setModifiedFilter(false);
       }
   })
 
   if (isLoading) return <p>Loading...</p>
-  if (!data) return <p>No profile data</p>
+  if (!data) return <p>No profile data</p> 
 
   return (
     <>
@@ -106,10 +127,10 @@ function CarsView() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex flex-row justify-between">
-        <div className="hidden lg:block md:w-full md:px-[37px] ">
+        <div className="hidden max-w-sm lg:block md:w-full md:px-[37px] ">
           <Filters data={formattFilters(data.items)} setFiltersApplied={setFiltersApplied} filtersApplied={filtersApplied} setModifiedFilter={setModifiedFilter}/>
         </div>
-        <div className="mt-16 pl-6 pr-6 lg:pl-0 lg:pr-14">
+        <div className="my-10 pl-6 pr-6 w-full lg:pl-0 lg:pr-14">
           <div className='grid grid-cols-5 items-center lg:items-start'>
             <div className="col-span-2 justify-self-center lg:col-span-4 lg:justify-self-start">
               {filtersApplied.length > 0 && <div className='hidden lg:flex flex-row flex-wrap gap-y-2'>
@@ -126,7 +147,7 @@ function CarsView() {
             </div>
             <hr className="col-span-1 justify-self-center rotate-90 w-5 bg-[#E3E5ED] lg:hidden"/>
             <div className="col-span-2 justify-self-center lg:col-span-1 lg:justify-self-end">
-              {filtersApplied.length > 0 && <button className="hidden lg:flex flex-row pt-1 text-[#566DED] text-sm items-center gap-1" onClick={() => {setFiltersApplied(new Array); setDataFiltered(data.items); setTotalItems(Object.keys(data.items).length)}}> 
+              {filtersApplied.length > 0 && <button className="hidden lg:flex flex-row pt-1 text-[#566DED] text-sm items-center gap-1" onClick={() => {setFiltersApplied(new Array); setDataFiltered(data.items); setDataPaginated(data.items.slice(0,12)); setTotalItems(Object.keys(data.items).length)}}> 
                 <svg width="16" height="18" viewBox="0 0 16 18" fill="#566DED" xmlns="http://www.w3.org/2000/svg">
                   <path fillRule="evenodd" clipRule="evenodd" d="M5.30212 1.30214C5.57561 1.02865 5.94654 0.875 6.33331 0.875H9.66665C10.0534 0.875 10.4244 1.02865 10.6978 1.30214C10.9713 1.57563 11.125 1.94656 11.125 2.33333V4.20833H14.6666C15.0118 4.20833 15.2916 4.48816 15.2916 4.83333C15.2916 5.17851 15.0118 5.45833 14.6666 5.45833H14.4153L13.7342 14.996C13.7342 14.9961 13.7342 14.996 13.7342 14.996C13.693 15.5742 13.4343 16.1153 13.0102 16.5103C12.586 16.9054 12.0279 17.125 11.4483 17.125H4.55166C3.97203 17.125 3.41393 16.9054 2.98976 16.5103C2.56563 16.1153 2.30692 15.5743 2.26573 14.9962C2.26573 14.9961 2.26574 14.9962 2.26573 14.9962L1.58468 5.45833H1.33331C0.988135 5.45833 0.708313 5.17851 0.708313 4.83333C0.708313 4.48816 0.988135 4.20833 1.33331 4.20833H4.87498V2.33333C4.87498 1.94656 5.02863 1.57563 5.30212 1.30214ZM6.12498 4.20833H9.87498V2.33333C9.87498 2.27808 9.85303 2.22509 9.81396 2.18602C9.77489 2.14695 9.7219 2.125 9.66665 2.125H6.33331C6.27806 2.125 6.22507 2.14695 6.186 2.18602C6.14693 2.22509 6.12498 2.27808 6.12498 2.33333V4.20833ZM2.83787 5.45833L3.51256 14.9072C3.53127 15.17 3.64887 15.416 3.84168 15.5956C4.03448 15.7752 4.28816 15.875 4.55165 15.875H11.4483C11.7118 15.875 11.9655 15.7752 12.1583 15.5956C12.3511 15.416 12.4687 15.1701 12.4874 14.9073L13.1621 5.45833H2.83787ZM6.33331 7.54167C6.67849 7.54167 6.95831 7.82149 6.95831 8.16667V13.1667C6.95831 13.5118 6.67849 13.7917 6.33331 13.7917C5.98813 13.7917 5.70831 13.5118 5.70831 13.1667V8.16667C5.70831 7.82149 5.98813 7.54167 6.33331 7.54167ZM9.66665 7.54167C10.0118 7.54167 10.2916 7.82149 10.2916 8.16667V13.1667C10.2916 13.5118 10.0118 13.7917 9.66665 13.7917C9.32147 13.7917 9.04165 13.5118 9.04165 13.1667V8.16667C9.04165 7.82149 9.32147 7.54167 9.66665 7.54167Z" fill="#566DED"/>
                 </svg>
@@ -149,7 +170,7 @@ function CarsView() {
                 <svg width="18" height="16" viewBox="0 0 18 16" fill="#566DED" xmlns="http://www.w3.org/2000/svg">
                   <path fillRule="evenodd" clipRule="evenodd" d="M5.27528 0.89139L8.60861 4.22472C8.85269 4.4688 8.85269 4.86453 8.60861 5.10861C8.36453 5.35268 7.9688 5.35268 7.72472 5.10861L5.45833 2.84222V11.3333C5.45833 11.6785 5.17851 11.9583 4.83333 11.9583C4.48816 11.9583 4.20833 11.6785 4.20833 11.3333V2.84222L1.94194 5.10861C1.69786 5.35268 1.30214 5.35268 1.05806 5.10861C0.813981 4.86453 0.813981 4.4688 1.05806 4.22472L4.39139 0.89139C4.45131 0.831468 4.52038 0.786256 4.59409 0.755756C4.66779 0.725198 4.74859 0.708332 4.83333 0.708332C4.91808 0.708332 4.99888 0.725198 5.07257 0.755756C5.14629 0.786256 5.21535 0.831468 5.27528 0.89139ZM12.5417 4.66667C12.5417 4.32149 12.8215 4.04167 13.1667 4.04167C13.5118 4.04167 13.7917 4.32149 13.7917 4.66667V13.1578L16.0581 10.8914C16.3021 10.6473 16.6979 10.6473 16.9419 10.8914C17.186 11.1355 17.186 11.5312 16.9419 11.7753L13.6086 15.1086C13.5487 15.1685 13.4796 15.2137 13.4059 15.2442C13.3322 15.2748 13.2514 15.2917 13.1667 15.2917C13.0819 15.2917 13.0011 15.2748 12.9274 15.2442C12.8537 15.2137 12.7846 15.1685 12.7247 15.1086L9.39139 11.7753C9.14731 11.5312 9.14731 11.1355 9.39139 10.8914C9.63547 10.6473 10.0312 10.6473 10.2753 10.8914L12.5417 13.1578V4.66667Z" fill="#566DED"/>
                 </svg>
-                Mais relevantes
+                Más relevantes
               </div>
               <button className="lg:hidden" onClick={layout === "grid" ? () => setLayout("list") : () => setLayout("grid")}>
                 {layout === "grid" ? 
@@ -163,24 +184,12 @@ function CarsView() {
               </button>
             </div>
           </div>
-          {layout === "grid" ?
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-5 w-auto" data-testid="cars-list">
-              {dataFiltered.map((e) => {
-                return <CardCuadricula key={e.id} product={e} setFavorites={setFavorites}/>;
-              })}
-            </div>
-            :
-            <div className="flex flex-col" data-testid="cars-list"> 
-              {dataFiltered.map((e) => {
-                return <><CardHorizontal key={e.id} product={e}/><hr className="w-full bg-[#E3E5ED]"/></>;
-              })}
-            </div>
-          }
+          {getCards(layout, dataPaginated, favorites, setFavorites)}
+          {dataPaginated.length !== 0 && <Pagination data={dataFiltered} total={totalItems} setDataPaginated={setDataPaginated}/>}
         </div>
       </main>
     </>
   )
 }
-
 
 export default CarsView

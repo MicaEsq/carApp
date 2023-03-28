@@ -1,11 +1,9 @@
 
-
 function deleteFilter(data, setFiltersApplied, filtersApplied, setModifiedFilter){
-    var newOptions = new Array(filtersApplied);
+    var newOptions = [...filtersApplied];
     const indexOfObject = newOptions.findIndex(object => {
         return object.label === data.label && object.value === data.value;
     });
-
     newOptions.splice(indexOfObject, 1);
     setFiltersApplied(newOptions);
     setModifiedFilter(true);

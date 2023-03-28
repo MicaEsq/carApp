@@ -25,7 +25,7 @@ function Carousel({image}) {
   return (
     <div className="group flex flex-row items-center">
         <button className='absolute z-10 pl-2 opacity-0 hover:opacity-100 duration-200' onClick={previousImage}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                 <path fill="white" fillOpacity="0.7" fillRule="evenodd" d="M7.72 12.53a.75.75 0 010-1.06l7.5-7.5a.75.75 0 111.06 1.06L9.31 12l6.97 6.97a.75.75 0 11-1.06 1.06l-7.5-7.5z" clipRule="evenodd" />
             </svg>
         </button>
@@ -38,7 +38,7 @@ function Carousel({image}) {
             title={""}
             />
         <button className='absolute z-10 right-0 pr-2 opacity-0 hover:opacity-100 duration-300' onClick={nextImage}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
             <path fill="white" fillOpacity="0.7" fillRule="evenodd" d="M16.28 11.47a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 01-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 011.06-1.06l7.5 7.5z" clipRule="evenodd" />
             </svg>
         </button>
