@@ -1,6 +1,6 @@
 const conPool = require('pg')
 let config = {
-  user: '',
+  user: ' ',
   host: 'localhost',
   database: '',
   password: '',
