@@ -32,4 +32,4 @@ yarn-error.log*
 .vercel
 
 # dbconnection
-/util/dbconnection.js
+/util/dbConnection.js
