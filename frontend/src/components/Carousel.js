@@ -42,7 +42,7 @@ function Carousel({image}) {
             <path fill="white" fillOpacity="0.7" fillRule="evenodd" d="M16.28 11.47a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 01-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 011.06-1.06l7.5 7.5z" clipRule="evenodd" />
             </svg>
         </button>
-        <div className='absolute z-10 bottom-2 inset-x-1/3 flex flex-row'>
+        <div className='absolute z-10 flex flex-row self-end mb-3 pl-8'>
             {[...Array(5)].map((e,i) => {
                 return <button key={i} className="px-1" onClick={() => definePrevOrNext(i)}>
                     <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
