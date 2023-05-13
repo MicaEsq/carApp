@@ -1,27 +1,27 @@
+import { event } from 'jquery';
 import { useState } from 'react';
 
-const RegisterPage = () => {
+function RegisterPage(){
   const [username, setUsername] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-  };
-
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handleNameChange = (event) => {
-    setName(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
+  const handleInputChange = (event) => {
+    if(event.target.name === 'username'){
+        setUsername(event.target.value);
+    }
+    else if(event.target.name === 'email'){
+        setEmail(event.target.value);
+    }
+    else if(event.target.name ==='name'){
+        setName(event.target.value);
+    }
+    else if(event.target.name === 'password'){
+        setPassword(event.target.value);
+    }
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -47,92 +47,122 @@ const RegisterPage = () => {
             return response.text().then(text => {throw new Error(text)});
         }
     })
-    .then(([responseOk, body]) => {
-
-        /* this.setState(prevState => ({
-            error: {
-                ...prevState.error,           
-                status: false,         
-                msg:'',
-            }
-        })); */
-        alert('successfully logged');
-
-        // Here you can perform your login logic
-        // For this example, let's just log the email and password to the console
-        console.log('User:', username);
-        console.log('Password:', password);
+    .then(() => {
 
         // Reset the form fields
         setUsername('');
         setName('');
         setEmail('');
         setPassword('');
-        //window.location.replace('/index');
+
+        window.location.replace('/login');
         
     })
     .catch((error) => {
-        console.log('error');
-            /* let errorObject = JSON.parse(error.message);
-            let errorMessage = '';
-            if(Object.keys(errorObject).length == 1){
-                errorMessage = Object.values(errorObject);
-            }
-            this.setState(prevState => ({
-            error: {
-                ...prevState.error,           
-                status: true,         
-                msg:'Warning! ' + errorMessage,
-            }
-            })); */
+        setError(error.message);
     });
 
     
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="user">User:</label>
-          <input
-            
-            id="user"
-            value={username}
-            onChange={handleUsernameChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="user">Full name:</label>
-          <input
-            
-            id="name"
-            value={name}
-            onChange={handleNameChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="user">Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={handleEmailChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
+    <>
+    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <img
+          className="mx-auto h-10 w-auto"
+          src="favicon.ico"
+          alt="Your Company"
+        />
+        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          Register your account
+        </h2>
+      </div>
+      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <form className="space-y-6" action="/login" method="POST">
+            <div>
+                <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                Fullname
+                </label>
+                <div className="mt-2">
+                <input
+                    id="name"
+                    name="name"
+                    type="name"
+                    required
+                    className="block w-full rounded-md border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                    onChange={handleInputChange}
+                />
+                </div>
+            </div>
+            <div>
+                <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                Username
+                </label>
+                <div className="mt-2">
+                <input
+                    id="username"
+                    name="username"
+                    type="username"
+                    required
+                    className="block w-full rounded-md border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                    onChange={handleInputChange}
+                />
+                </div>
+            </div>
+            <div>
+                <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                    Email address
+                </label>
+                <div className="mt-2">
+                    <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    className="block w-full rounded-md border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                    onChange={handleInputChange}
+                />
+                </div>
+            </div>
+            <div>
+                <div className="flex items-center justify-between">
+                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                    Password
+                </label>
+                <div className="text-sm">
+                    <a href="#" className="font-semibold text-indigo-500 hover:text-indigo-400">
+                    Forgot password?
+                    </a>
+                </div>
+                </div>
+                <div className="mt-2">
+                <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    className="block w-full rounded-md border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                    onChange={handleInputChange}
+                />
+                </div>
+            </div>
+
+            <div>
+                <button
+                type="submit"
+                className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                onClick={handleSubmit}
+                >
+                Sign in
+                </button>
+            </div>
+        </form>
+      </div>
     </div>
+  </>
   );
 };
 

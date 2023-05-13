@@ -71,6 +71,42 @@ function getCards(layout, dataPaginated, favorites, setFavorites){
   
 }
 
+const handleLogout=(event)=>{
+  event.preventDefault();
+    
+    let url = 'http://localhost:3001/logout';
+    let method = 'GET';
+    let msgError = "Error, the password or username is invalid.";
+    //let data = {username: username, password: password};
+
+    var requestOptions = {
+            method: method,
+            headers: { 'Content-Type': 'application/json'},
+            //body: JSON.stringify(data)
+    };
+    
+    fetch(url, requestOptions)
+    .then(response => {
+        if (response.ok){
+            return Promise.all([response.ok, response.json()]);
+        }
+        else{
+            return response.text().then(text => {throw new Error(text)});
+        }
+    })
+    .then(([responseOk, body]) => {
+        console.log(body.message);
+        //setUsername('');
+        //setPassword('');
+
+        //window.location.replace('/');
+    })
+    .catch((error) => {
+      console.log(error.message);
+        //setError(error.message);
+    });
+}
+
 
 function CarsView() {
 
@@ -127,6 +163,7 @@ function CarsView() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex flex-row justify-between">
+        <div onClick={handleLogout}>logout</div>
         <div className="hidden max-w-sm lg:block md:w-full md:px-[37px] ">
           <Filters data={formattFilters(data.items)} setFiltersApplied={setFiltersApplied} filtersApplied={filtersApplied} setModifiedFilter={setModifiedFilter}/>
         </div>
