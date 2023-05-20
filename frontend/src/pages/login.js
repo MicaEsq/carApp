@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router'
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const router = useRouter();
 
   const handleEmailChange = (event) => {
     setUsername(event.target.value);
@@ -40,8 +42,8 @@ const LoginPage = () => {
         
         setUsername('');
         setPassword('');
-
-        window.location.replace('/');
+        router.push('/');
+        //window.location.replace('/');
     })
     .catch((error) => {
         setError(error.message);

@@ -1,1 +1,2 @@
 backend/util/dbConnection.js
+.env

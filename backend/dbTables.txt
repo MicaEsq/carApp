@@ -1,0 +1,52 @@
+-- Create table for users
+CREATE TABLE users (
+    ID SERIAL PRIMARY KEY, 
+    username VARCHAR(20), 
+    name VARCHAR(30), 
+    email VARCHAR(30), 
+    passwordhash VARCHAR(64)
+);
+
+-- Create table for states
+CREATE TABLE states (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255)
+);
+
+-- Create table for cities
+CREATE TABLE cities (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255),
+  state_id INTEGER REFERENCES states(id)
+);
+
+-- Create table for car brands
+CREATE TABLE brands (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255)
+);
+
+-- Create table for car models
+CREATE TABLE models (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255),
+  brand_id INTEGER REFERENCES brands(id)
+);
+
+-- Create table for cars
+CREATE TABLE cars (
+  id SERIAL PRIMARY KEY,
+  city_id INTEGER REFERENCES cities(id),
+  state_id INTEGER REFERENCES states(id),
+  year INTEGER,
+  brand_id INTEGER REFERENCES brands(id),
+  model_id INTEGER REFERENCES models(id),
+  version VARCHAR(50),
+  transmission VARCHAR(10),
+  condition VARCHAR(50),
+  price NUMERIC(10,2),
+  mileage INTEGER,
+  image VARCHAR(255),
+  promoted BOOLEAN,
+  financing BOOLEAN
+);

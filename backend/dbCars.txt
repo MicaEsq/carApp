@@ -1,0 +1,22 @@
+INSERT INTO cars (city_id, state_id, year, brand_id, model_id, version, transmission, condition, price, mileage, image, promoted, financing)
+VALUES
+  ( 1, 14, 2019, 1, 1, 'v1', 'Automatic', 'Used', 25000, 50000, 'car1.jpg', true, false),
+  ( 1, 21, 2020, 2, 1, 'v2', 'Manual', 'New', 35000, 1000, 'car2.jpg', false, true),
+  ( 1, 37, 2018, 3, 1, 'v3',' 'Automatic', 'Used', 15000, 75000, 'car3.jpg', true, false),
+  ( 1, 9, 2021, 4, 1, 'v4', 'Automatic', 'Used', 20000, 60000, 'car4.jpg', false, true),
+  ( 1, 28, 2020, 5, 1, 'v5', 'Manual', 'Used', 18000, 80000, 'car5.jpg', true, false),
+  ( 1, 45, 2017, 6, 1, 'v6', 'Automatic', 'Used', 12000, 90000, 'car6.jpg', false, true),
+  ( 1, 11, 2022, 7, 1, 'v7', 'Automatic', 'New', 30000, 2000, 'car7.jpg', true, false),
+  ( 1, 18, 2019, 8, 1, 'v8', 'Manual', 'Used', 22000, 70000, 'car8.jpg', false, true),
+  ( 1, 35, 2020, 9, 1, 'v9', 'Automatic', 'Used', 17000, 85000, 'car9.jpg', true, false),
+  ( 1, 4, 2018, 10, 1, 'v10', 'Automatic', 'Used', 19000, 65000, 'car10.jpg', false, true),
+  ( 1, 16, 2021, 11, 1, 'v11', 'Manual', 'Used', 13000, 95000, 'car11.jpg', true, false),
+  ( 1, 32, 2022, 12, 1, 'v12', 'Automatic', 'New', 28000, 3000, 'car12.jpg', false, true),
+  ( 1, 30, 2020, 13, 1, 'v13', 'Automatic', 'Used', 16000, 80000, 'car13.jpg', true, false),
+  ( 1, 13, 2017, 14, 1, 'v14', 'Manual', 'Used', 11000, 90000, 'car14.jpg', false, true),
+  ( 1, 30, 2023, 15, 1, 'v15', 'Automatic', 'New', 32000, 1500, 'car15.jpg', true, false),
+  ( 1, 40, 2019, 16, 1, 'v16', 'Automatic', 'Used', 24000, 55000, 'car16.jpg', true, false),
+  ( 1, 15, 2022, 17, 1, 'v17', 'Manual', 'New', 38000, 2500, 'car17.jpg', false, true),
+  ( 1, 31, 2018, 18, 1, 'v18', 'Automatic', 'Used', 14000, 70000, 'car18.jpg', true, false),
+  ( 1, 38, 2020, 19, 1, 'v19', 'Automatic', 'Used', 21000, 65000, 'car19.jpg', false, true),
+  ( 1, 5, 2017, 20, 1, 'v20', 'Manual', 'Used', 16000, 90000, 'car20.jpg', true, false);

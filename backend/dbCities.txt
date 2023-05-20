@@ -1,0 +1,206 @@
+-- Insert data into the cities table
+INSERT INTO cities (state_id, name)
+VALUES
+  -- Alabama
+  ((SELECT id FROM states WHERE name = 'Alabama'), 'Birmingham'),
+  ((SELECT id FROM states WHERE name = 'Alabama'), 'Montgomery'),
+  ((SELECT id FROM states WHERE name = 'Alabama'), 'Mobile'),
+  -- Alaska
+  ((SELECT id FROM states WHERE name = 'Alaska'), 'Anchorage'),
+  ((SELECT id FROM states WHERE name = 'Alaska'), 'Fairbanks'),
+  ((SELECT id FROM states WHERE name = 'Alaska'), 'Juneau'),
+  -- Arizona
+  ((SELECT id FROM states WHERE name = 'Arizona'), 'Phoenix'),
+  ((SELECT id FROM states WHERE name = 'Arizona'), 'Tucson'),
+  ((SELECT id FROM states WHERE name = 'Arizona'), 'Mesa'),
+  -- Arkansas
+  ((SELECT id FROM states WHERE name = 'Arkansas'), 'Little Rock'),
+  ((SELECT id FROM states WHERE name = 'Arkansas'), 'Fort Smith'),
+  ((SELECT id FROM states WHERE name = 'Arkansas'), 'Fayetteville'),
+  -- California
+  ((SELECT id FROM states WHERE name = 'California'), 'Los Angeles'),
+  ((SELECT id FROM states WHERE name = 'California'), 'San Francisco'),
+  ((SELECT id FROM states WHERE name = 'California'), 'San Diego'),
+  -- Colorado
+  ((SELECT id FROM states WHERE name = 'Colorado'), 'Denver'),
+  ((SELECT id FROM states WHERE name = 'Colorado'), 'Colorado Springs'),
+  ((SELECT id FROM states WHERE name = 'Colorado'), 'Aurora'),
+  -- Connecticut
+  ((SELECT id FROM states WHERE name = 'Connecticut'), 'Bridgeport'),
+  ((SELECT id FROM states WHERE name = 'Connecticut'), 'New Haven'),
+  ((SELECT id FROM states WHERE name = 'Connecticut'), 'Hartford'),
+  -- Delaware
+  ((SELECT id FROM states WHERE name = 'Delaware'), 'Wilmington'),
+  ((SELECT id FROM states WHERE name = 'Delaware'), 'Dover'),
+  ((SELECT id FROM states WHERE name = 'Delaware'), 'Newark'),
+  -- Florida
+  ((SELECT id FROM states WHERE name = 'Florida'), 'Miami'),
+  ((SELECT id FROM states WHERE name = 'Florida'), 'Orlando'),
+  ((SELECT id FROM states WHERE name = 'Florida'), 'Tampa'),
+  -- Georgia
+  ((SELECT id FROM states WHERE name = 'Georgia'), 'Atlanta'),
+  ((SELECT id FROM states WHERE name = 'Georgia'), 'Savannah'),
+  ((SELECT id FROM states WHERE name = 'Georgia'), 'Augusta'),
+  -- Hawaii
+  ((SELECT id FROM states WHERE name = 'Hawaii'), 'Honolulu'),
+  ((SELECT id FROM states WHERE name = 'Hawaii'), 'Hilo'),
+  ((SELECT id FROM states WHERE name = 'Hawaii'), 'Kailua'),
+  -- Idaho
+  ((SELECT id FROM states WHERE name = 'Idaho'), 'Boise'),
+  ((SELECT id FROM states WHERE name = 'Idaho'), 'Meridian'),
+  ((SELECT id FROM states WHERE name = 'Idaho'), 'Nampa'),
+  -- Illinois
+  ((SELECT id FROM states WHERE name = 'Illinois'), 'Chicago'),
+  ((SELECT id FROM states WHERE name = 'Illinois'), 'Springfield'),
+  ((SELECT id FROM states WHERE name = 'Illinois'), 'Rockford'),
+  -- Indiana
+  ((SELECT id FROM states WHERE name = 'Indiana'), 'Indianapolis'),
+  ((SELECT id FROM states WHERE name = 'Indiana'), 'Fort Wayne'),
+  ((SELECT id FROM states WHERE name = 'Indiana'), 'Evansville'),
+  -- Iowa
+  ((SELECT id FROM states WHERE name = 'Iowa'), 'Des Moines'),
+  ((SELECT id FROM states WHERE name = 'Iowa'), 'Cedar Rapids'),
+  ((SELECT id FROM states WHERE name = 'Iowa'), 'Davenport'),
+  -- Kansas
+  ((SELECT id FROM states WHERE name = 'Kansas'), 'Wichita'),
+  ((SELECT id FROM states WHERE name = 'Kansas'), 'Overland Park'),
+  ((SELECT id FROM states WHERE name = 'Kansas'), 'Kansas City'),
+  -- Kentucky
+  ((SELECT id FROM states WHERE name = 'Kentucky'), 'Louisville'),
+  ((SELECT id FROM states WHERE name = 'Kentucky'), 'Lexington'),
+  ((SELECT id FROM states WHERE name = 'Kentucky'), 'Bowling Green'),
+  -- Louisiana
+  ((SELECT id FROM states WHERE name = 'Louisiana'), 'New Orleans'),
+  ((SELECT id FROM states WHERE name = 'Louisiana'), 'Baton Rouge'),
+  ((SELECT id FROM states WHERE name = 'Louisiana'), 'Shreveport'),
+  -- Maine
+  ((SELECT id FROM states WHERE name = 'Maine'), 'Portland'),
+  ((SELECT id FROM states WHERE name = 'Maine'), 'Lewiston'),
+  ((SELECT id FROM states WHERE name = 'Maine'), 'Bangor'),
+  -- Maryland
+  ((SELECT id FROM states WHERE name = 'Maryland'), 'Baltimore'),
+  ((SELECT id FROM states WHERE name = 'Maryland'), 'Annapolis'),
+  ((SELECT id FROM states WHERE name = 'Maryland'), 'Frederick'),
+  -- Massachusetts
+  ((SELECT id FROM states WHERE name = 'Massachusetts'), 'Boston'),
+  ((SELECT id FROM states WHERE name = 'Massachusetts'), 'Worcester'),
+  ((SELECT id FROM states WHERE name = 'Massachusetts'), 'Springfield'),
+  -- Michigan
+  ((SELECT id FROM states WHERE name = 'Michigan'), 'Detroit'),
+  ((SELECT id FROM states WHERE name = 'Michigan'), 'Grand Rapids'),
+  ((SELECT id FROM states WHERE name = 'Michigan'), 'Lansing'),
+  -- Minnesota
+  ((SELECT id FROM states WHERE name = 'Minnesota'), 'Minneapolis'),
+  ((SELECT id FROM states WHERE name = 'Minnesota'), 'St. Paul'),
+  ((SELECT id FROM states WHERE name = 'Minnesota'), 'Rochester'),
+  -- Mississippi
+  ((SELECT id FROM states WHERE name = 'Mississippi'), 'Jackson'),
+  ((SELECT id FROM states WHERE name = 'Mississippi'), 'Gulfport'),
+  ((SELECT id FROM states WHERE name = 'Mississippi'), 'Hattiesburg'),
+  -- Missouri
+  ((SELECT id FROM states WHERE name = 'Missouri'), 'Kansas City'),
+  ((SELECT id FROM states WHERE name = 'Missouri'), 'St. Louis'),
+  ((SELECT id FROM states WHERE name = 'Missouri'), 'Springfield'),
+  -- Montana
+  ((SELECT id FROM states WHERE name = 'Montana'), 'Billings'),
+  ((SELECT id FROM states WHERE name = 'Montana'), 'Missoula'),
+  ((SELECT id FROM states WHERE name = 'Montana'), 'Great Falls'),
+  -- Nebraska
+  ((SELECT id FROM states WHERE name = 'Nebraska'), 'Omaha'),
+  ((SELECT id FROM states WHERE name = 'Nebraska'), 'Lincoln'),
+  ((SELECT id FROM states WHERE name = 'Nebraska'), 'Bellevue'),
+  -- Nevada
+  ((SELECT id FROM states WHERE name = 'Nevada'), 'Las Vegas'),
+  ((SELECT id FROM states WHERE name = 'Nevada'), 'Reno'),
+  ((SELECT id FROM states WHERE name = 'Nevada'), 'Henderson'),
+  -- New Hampshire
+  ((SELECT id FROM states WHERE name = 'New Hampshire'), 'Manchester'),
+  ((SELECT id FROM states WHERE name = 'New Hampshire'), 'Nashua'),
+  ((SELECT id FROM states WHERE name = 'New Hampshire'), 'Concord'),
+  -- New Jersey
+  ((SELECT id FROM states WHERE name = 'New Jersey'), 'Newark'),
+  ((SELECT id FROM states WHERE name = 'New Jersey'), 'Jersey City'),
+  ((SELECT id FROM states WHERE name = 'New Jersey'), 'Paterson'),
+  -- New Mexico
+  ((SELECT id FROM states WHERE name = 'New Mexico'), 'Albuquerque'),
+  ((SELECT id FROM states WHERE name = 'New Mexico'), 'Las Cruces'),
+  ((SELECT id FROM states WHERE name = 'New Mexico'), 'Santa Fe'),
+  -- New York
+  ((SELECT id FROM states WHERE name = 'New York'), 'New York City'),
+  ((SELECT id FROM states WHERE name = 'New York'), 'Buffalo'),
+  ((SELECT id FROM states WHERE name = 'New York'), 'Rochester'),
+  -- North Carolina
+  ((SELECT id FROM states WHERE name = 'North Carolina'), 'Charlotte'),
+  ((SELECT id FROM states WHERE name = 'North Carolina'), 'Raleigh'),
+  ((SELECT id FROM states WHERE name = 'North Carolina'), 'Greensboro'),
+  -- North Dakota
+  ((SELECT id FROM states WHERE name = 'North Dakota'), 'Fargo'),
+  ((SELECT id FROM states WHERE name = 'North Dakota'), 'Bismarck'),
+  ((SELECT id FROM states WHERE name = 'North Dakota'), 'Grand Forks'),
+  -- Ohio
+  ((SELECT id FROM states WHERE name = 'Ohio'), 'Columbus'),
+  ((SELECT id FROM states WHERE name = 'Ohio'), 'Cleveland'),
+  ((SELECT id FROM states WHERE name = 'Ohio'), 'Cincinnati'),
+  -- Oklahoma
+  ((SELECT id FROM states WHERE name = 'Oklahoma'), 'Oklahoma City'),
+  ((SELECT id FROM states WHERE name = 'Oklahoma'), 'Tulsa'),
+  ((SELECT id FROM states WHERE name = 'Oklahoma'), 'Norman'),
+  -- Oregon
+  ((SELECT id FROM states WHERE name = 'Oregon'), 'Portland'),
+  ((SELECT id FROM states WHERE name = 'Oregon'), 'Salem'),
+  ((SELECT id FROM states WHERE name = 'Oregon'), 'Eugene'),
+  -- Pennsylvania
+  ((SELECT id FROM states WHERE name = 'Pennsylvania'), 'Philadelphia'),
+  ((SELECT id FROM states WHERE name = 'Pennsylvania'), 'Pittsburgh'),
+  ((SELECT id FROM states WHERE name = 'Pennsylvania'), 'Allentown'),
+  -- Rhode Island
+  ((SELECT id FROM states WHERE name = 'Rhode Island'), 'Providence'),
+  ((SELECT id FROM states WHERE name = 'Rhode Island'), 'Warwick'),
+  ((SELECT id FROM states WHERE name = 'Rhode Island'), 'Cranston'),
+  -- South Carolina
+  ((SELECT id FROM states WHERE name = 'South Carolina'), 'Columbia'),
+  ((SELECT id FROM states WHERE name = 'South Carolina'), 'Charleston'),
+  ((SELECT id FROM states WHERE name = 'South Carolina'), 'North Charleston'),
+  -- South Dakota
+  ((SELECT id FROM states WHERE name = 'South Dakota'), 'Sioux Falls'),
+  ((SELECT id FROM states WHERE name = 'South Dakota'), 'Rapid City'),
+  ((SELECT id FROM states WHERE name = 'South Dakota'), 'Aberdeen'),
+  -- Tennessee
+  ((SELECT id FROM states WHERE name = 'Tennessee'), 'Nashville'),
+  ((SELECT id FROM states WHERE name = 'Tennessee'), 'Memphis'),
+  ((SELECT id FROM states WHERE name = 'Tennessee'), 'Knoxville'),
+  -- Texas
+  ((SELECT id FROM states WHERE name = 'Texas'), 'Houston'),
+  ((SELECT id FROM states WHERE name = 'Texas'), 'Dallas'),
+  ((SELECT id FROM states WHERE name = 'Texas'), 'Austin'),
+  -- Utah
+  ((SELECT id FROM states WHERE name = 'Utah'), 'Salt Lake City'),
+  ((SELECT id FROM states WHERE name = 'Utah'), 'West Valley City'),
+  ((SELECT id FROM states WHERE name = 'Utah'), 'Provo'),
+  -- Vermont
+  ((SELECT id FROM states WHERE name = 'Vermont'), 'Burlington'),
+  ((SELECT id FROM states WHERE name = 'Vermont'), 'Essex'),
+  ((SELECT id FROM states WHERE name = 'Vermont'), 'South Burlington'),
+  -- Virginia
+  ((SELECT id FROM states WHERE name = 'Virginia'), 'Virginia Beach'),
+  ((SELECT id FROM states WHERE name = 'Virginia'), 'Norfolk'),
+  ((SELECT id FROM states WHERE name = 'Virginia'), 'Richmond'),
+  -- Washington
+  ((SELECT id FROM states WHERE name = 'Washington'), 'Seattle'),
+  ((SELECT id FROM states WHERE name = 'Washington'), 'Spokane'),
+  ((SELECT id FROM states WHERE name = 'Washington'), 'Tacoma'),
+  -- West Virginia
+  ((SELECT id FROM states WHERE name = 'West Virginia'), 'Charleston'),
+  ((SELECT id FROM states WHERE name = 'West Virginia'), 'Huntington'),
+  ((SELECT id FROM states WHERE name = 'West Virginia'), 'Morgantown'),
+  -- Wisconsin
+  ((SELECT id FROM states WHERE name = 'Wisconsin'), 'Milwaukee'),
+  ((SELECT id FROM states WHERE name = 'Wisconsin'), 'Madison'),
+  ((SELECT id FROM states WHERE name = 'Wisconsin'), 'Green Bay'),
+   -- Wyoming  ((SELECT id FROM states WHERE name = 'Wyoming'), 'Cheyenne'),
+  ((SELECT id FROM states WHERE name = 'Wyoming'), 'Casper'),
+  ((SELECT id FROM states WHERE name = 'Wyoming'), 'Laramie');
+
+-- You can continue adding more cities for each state in a similar manner
+
+COMMIT;

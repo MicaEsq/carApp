@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import CardCuadricula from 'i/components/CardCuadricula'
 import CardHorizontal from 'i/components/CardHorizontal'
@@ -71,41 +72,7 @@ function getCards(layout, dataPaginated, favorites, setFavorites){
   
 }
 
-const handleLogout=(event)=>{
-  event.preventDefault();
-    
-    let url = 'http://localhost:3001/logout';
-    let method = 'GET';
-    let msgError = "Error, the password or username is invalid.";
-    //let data = {username: username, password: password};
 
-    var requestOptions = {
-            method: method,
-            headers: { 'Content-Type': 'application/json'},
-            //body: JSON.stringify(data)
-    };
-    
-    fetch(url, requestOptions)
-    .then(response => {
-        if (response.ok){
-            return Promise.all([response.ok, response.json()]);
-        }
-        else{
-            return response.text().then(text => {throw new Error(text)});
-        }
-    })
-    .then(([responseOk, body]) => {
-        console.log(body.message);
-        //setUsername('');
-        //setPassword('');
-
-        //window.location.replace('/');
-    })
-    .catch((error) => {
-      console.log(error.message);
-        //setError(error.message);
-    });
-}
 
 
 function CarsView() {
@@ -120,7 +87,9 @@ function CarsView() {
   const [favorites, setFavorites] = useState(new Array);
   const [dataPaginated, setDataPaginated] = useState(new Array);
 
-  useEffect(() => {
+  const router = useRouter();
+
+  /* useEffect(() => {
     setLoading(true)
     fetch('https://mocki.io/v1/ddc770fd-1346-438e-a15f-cf8767577b9e')
       .then((res) => res.json())
@@ -130,6 +99,41 @@ function CarsView() {
         getFilteredData(data.items, setDataFiltered, filtersApplied, setTotalItems, setDataPaginated);
         setLoading(false)
       })
+  }, [])
+ */
+  useEffect(() => {
+
+      setLoading(true);
+
+      let url = 'http://localhost:3001/cars';
+      let method = 'GET';
+      let msgError = "Error, logout wasn't possible.";
+  
+      var requestOptions = {
+          method: method,
+          headers: { 'Content-Type': 'application/json'},
+      };
+      
+      fetch(url, requestOptions)
+      .then(response => {
+          if (response.ok){
+              return response.json();
+          }
+          else{
+              return response.text().then(text => {throw new Error(text)});
+          }
+      })
+      .then((response) => {
+        setData(response);
+        setTotalItems(Object.keys(response).length);
+        getFilteredData(response, setDataFiltered, filtersApplied, setTotalItems, setDataPaginated);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+          //setError(error.message);
+      });
+
   }, [])
 
   useEffect(() => {
@@ -146,10 +150,41 @@ function CarsView() {
 
   useEffect(() => {
       if(modifiedFilter){
-        getFilteredData(data.items, setDataFiltered, filtersApplied, setTotalItems, setDataPaginated);
+        getFilteredData(data, setDataFiltered, filtersApplied, setTotalItems, setDataPaginated);
         setModifiedFilter(false);
       }
   })
+
+  const handleLogout=(event)=>{
+
+    event.preventDefault();
+      
+      let url = 'http://localhost:3001/logout';
+      let method = 'GET';
+      let msgError = "Error, logout wasn't possible.";
+  
+      var requestOptions = {
+          method: method,
+          headers: { 'Content-Type': 'application/json'},
+      };
+      
+      fetch(url, requestOptions)
+      .then(response => {
+          if (response.ok){
+              return Promise.all([response.ok]);
+          }
+          else{
+              return response.text().then(text => {throw new Error(text)});
+          }
+      })
+      .then(([responseOk]) => {
+        router.push('/login');
+      })
+      .catch((error) => {
+        console.log(error.message);
+          //setError(error.message);
+      });
+  }
 
   if (isLoading) return <p>Loading...</p>
   if (!data) return <p>No profile data</p> 
@@ -165,7 +200,7 @@ function CarsView() {
       <main className="flex flex-row justify-between">
         <div onClick={handleLogout}>logout</div>
         <div className="hidden max-w-sm lg:block md:w-full md:px-[37px] ">
-          <Filters data={formattFilters(data.items)} setFiltersApplied={setFiltersApplied} filtersApplied={filtersApplied} setModifiedFilter={setModifiedFilter}/>
+          <Filters data={formattFilters(data)} setFiltersApplied={setFiltersApplied} filtersApplied={filtersApplied} setModifiedFilter={setModifiedFilter}/>
         </div>
         <div className="my-10 pl-6 pr-6 w-full lg:pl-0 lg:pr-14">
           <div className='grid grid-cols-5 items-center lg:items-start'>
@@ -184,7 +219,7 @@ function CarsView() {
             </div>
             <hr className="col-span-1 justify-self-center rotate-90 w-5 bg-[#E3E5ED] lg:hidden"/>
             <div className="col-span-2 justify-self-center lg:col-span-1 lg:justify-self-end">
-              {filtersApplied.length > 0 && <button className="hidden lg:flex flex-row pt-1 text-[#566DED] text-sm items-center gap-1" onClick={() => {setFiltersApplied(new Array); setDataFiltered(data.items); setDataPaginated(data.items.slice(0,12)); setTotalItems(Object.keys(data.items).length)}}> 
+              {filtersApplied.length > 0 && <button className="hidden lg:flex flex-row pt-1 text-[#566DED] text-sm items-center gap-1" onClick={() => {setFiltersApplied(new Array); setDataFiltered(data); setDataPaginated(data.slice(0,12)); setTotalItems(Object.keys(data).length)}}> 
                 <svg width="16" height="18" viewBox="0 0 16 18" fill="#566DED" xmlns="http://www.w3.org/2000/svg">
                   <path fillRule="evenodd" clipRule="evenodd" d="M5.30212 1.30214C5.57561 1.02865 5.94654 0.875 6.33331 0.875H9.66665C10.0534 0.875 10.4244 1.02865 10.6978 1.30214C10.9713 1.57563 11.125 1.94656 11.125 2.33333V4.20833H14.6666C15.0118 4.20833 15.2916 4.48816 15.2916 4.83333C15.2916 5.17851 15.0118 5.45833 14.6666 5.45833H14.4153L13.7342 14.996C13.7342 14.9961 13.7342 14.996 13.7342 14.996C13.693 15.5742 13.4343 16.1153 13.0102 16.5103C12.586 16.9054 12.0279 17.125 11.4483 17.125H4.55166C3.97203 17.125 3.41393 16.9054 2.98976 16.5103C2.56563 16.1153 2.30692 15.5743 2.26573 14.9962C2.26573 14.9961 2.26574 14.9962 2.26573 14.9962L1.58468 5.45833H1.33331C0.988135 5.45833 0.708313 5.17851 0.708313 4.83333C0.708313 4.48816 0.988135 4.20833 1.33331 4.20833H4.87498V2.33333C4.87498 1.94656 5.02863 1.57563 5.30212 1.30214ZM6.12498 4.20833H9.87498V2.33333C9.87498 2.27808 9.85303 2.22509 9.81396 2.18602C9.77489 2.14695 9.7219 2.125 9.66665 2.125H6.33331C6.27806 2.125 6.22507 2.14695 6.186 2.18602C6.14693 2.22509 6.12498 2.27808 6.12498 2.33333V4.20833ZM2.83787 5.45833L3.51256 14.9072C3.53127 15.17 3.64887 15.416 3.84168 15.5956C4.03448 15.7752 4.28816 15.875 4.55165 15.875H11.4483C11.7118 15.875 11.9655 15.7752 12.1583 15.5956C12.3511 15.416 12.4687 15.1701 12.4874 14.9073L13.1621 5.45833H2.83787ZM6.33331 7.54167C6.67849 7.54167 6.95831 7.82149 6.95831 8.16667V13.1667C6.95831 13.5118 6.67849 13.7917 6.33331 13.7917C5.98813 13.7917 5.70831 13.5118 5.70831 13.1667V8.16667C5.70831 7.82149 5.98813 7.54167 6.33331 7.54167ZM9.66665 7.54167C10.0118 7.54167 10.2916 7.82149 10.2916 8.16667V13.1667C10.2916 13.5118 10.0118 13.7917 9.66665 13.7917C9.32147 13.7917 9.04165 13.5118 9.04165 13.1667V8.16667C9.04165 7.82149 9.32147 7.54167 9.66665 7.54167Z" fill="#566DED"/>
                 </svg>

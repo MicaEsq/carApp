@@ -89,7 +89,7 @@ const register = (request, response) => {
     });
 }
 
-const login = (request, response) => {
+const login = (request, response, next) => {
     const { username, password } = request.body
     
     connectionPool.query("SELECT * FROM users WHERE username='" + username + "'", (error, results) => {
@@ -97,29 +97,31 @@ const login = (request, response) => {
             response.status(401).send({message: 'The login was unsuccessfull 1'});
         }
         else{
-            let passwordRetrieved = results.rows[0].passwordhash;
+            if(results.rows.length === 0){
+                response.status(401).send({message: 'The login was unsuccessfull 2'});
+            }
+            else{
+                let passwordRetrieved = results.rows[0].passwordhash;
 
-            bcrypt.compare(password, passwordRetrieved).then(function(result) {
-                
-                if(result === true){
-                    request.session.user = {
-                        name: results.rows[0].name,
-                    };
+                bcrypt.compare(password, passwordRetrieved).then(function(result) {
+                    
+                    if(result === true){
 
-                    response.status(200).send({message: 'Login successfull' + request.session.user.name});
-                }
-                else{
-                    response.status(401).send({message: 'The login was unsuccessfull'});
-                }
-            });
+                        response.status(200).send({message: 'Login successfull'});
+                    }
+                    else{
+                        response.status(401).send({message: 'The login was unsuccessfull 3'});
+                    }
+                });
+            }
+            
         }
     })
 } 
 
 const logout = (request, response) => {
-    //const { username, password } = request.body
-    const sessionId = request.sid;
-    request.session.destroy(sessionId, (error) => {
+    
+    /* request.session.destroy((error) => {
         if(error){
             console.error('error destroying session: ', error);
             // Handle the error appropriately
@@ -128,13 +130,19 @@ const logout = (request, response) => {
         else{
             console.log('Session deleted from database successfully');
             // Redirect the user to the login page or any other appropriate action
-            response.send('/login');
-           
+            response.sendStatus(200);
         }
-        //response.redirect('/login');
-        
-    });
+    }); */
 } 
+
+const getCars = (request, response) => {
+    connectionPool.query('SELECT * FROM cars ORDER BY id ASC', (error, results) => {
+      if (error) {
+        throw error
+      }
+      response.status(200).send(results.rows)
+    })
+}
 
 module.exports = {
     getUsers,
@@ -145,4 +153,5 @@ module.exports = {
     login,
     register,
     logout,
-}
+    getCars,
+} 
