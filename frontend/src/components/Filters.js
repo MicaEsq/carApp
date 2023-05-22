@@ -1,7 +1,7 @@
 import { Disclosure } from '@headlessui/react'
+import { useState, useEffect } from 'react'
 
-
-function getButtons(options, typeOfFilterEnglish, setFiltersApplied, filtersApplied, setModifiedFilter){
+function getButtons(options, typeOfFilters, setFiltersApplied, filtersApplied, setModifiedFilter){
 
   var newSetOptions = filtersApplied.slice();
   
@@ -15,13 +15,57 @@ function getButtons(options, typeOfFilterEnglish, setFiltersApplied, filtersAppl
   }
 
   return options.map((option, index) => {
-    return <Disclosure.Button key={index} className='text-[#1B2141] pb-4 text-left' onClick={()=>addToSet(option, typeOfFilterEnglish)}>{option}</Disclosure.Button>
+    return <Disclosure.Button key={index} className='text-[#1B2141] pb-4 text-left' onClick={()=>addToSet(option, typeOfFilters)}>{option}</Disclosure.Button>
   })
 }
 
 export default function Filters({data, setFiltersApplied, filtersApplied, setModifiedFilter}) {
-  var filters=["marca", "modelo", "version", "año", "ciudad"];
-  var filterEnglish = ['brand', 'model', 'version', 'year', 'city'];
+
+  const [filters, setFilters] = useState(['brand', 'model', 'year', 'state']);
+  const [brands, setBrands] = useState([]);
+  const [states, setStates] = useState([]);
+
+  useEffect(() => {
+    
+    getFilters('brands')
+    getFilters('states')
+
+  }, [])
+
+  function getFilters(extension){
+
+      let url = 'http://localhost:3001/' + extension;
+      let method = 'GET';
+      let msgError = "Error, filters could not be loaded.";
+
+      var requestOptions = {
+          method: method,
+          headers: { 'Content-Type': 'application/json'},
+      };
+      
+      fetch(url, requestOptions)
+      .then(response => {
+          if (response.ok){
+              return response.json();
+          }
+          else{
+              return response.text().then(text => {throw new Error(text)});
+          }
+      })
+      .then((response) => {
+        console.log(response);
+        if(extension === 'brands'){
+          setBrands(response)
+        }
+        else{
+          setStates(response)
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+          //setError(error.message);
+      });
+  }
 
   return (
     <div className="flex flex-col bg-white mt-16 rounded-lg">
@@ -38,7 +82,7 @@ export default function Filters({data, setFiltersApplied, filtersApplied, setMod
               </div>
             </Disclosure.Button>
             <Disclosure.Panel className="grid grid-cols-1 justify-items-start text-gray-900 text-sm">
-              {getButtons(data[typeOfFilter], filterEnglish[index], setFiltersApplied, filtersApplied, setModifiedFilter)}
+              {getButtons(typeOfFilter, filters[index], setFiltersApplied, filtersApplied, setModifiedFilter)}
             </Disclosure.Panel>
             <hr/> 
             </>

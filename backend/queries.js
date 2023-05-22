@@ -136,13 +136,45 @@ const logout = (request, response) => {
 } 
 
 const getCars = (request, response) => {
-    connectionPool.query('SELECT * FROM cars ORDER BY id ASC', (error, results) => {
-      if (error) {
-        throw error
-      }
-      response.status(200).send(results.rows)
+   
+    connectionPool.query(`SELECT c.id, ci.name AS city_name, s.name AS state_name, c.year, b.name AS brand_name, m.name AS model_name, c.version, c.transmission, c.condition, c.price, c.mileage, c.image, c.promoted, c.financing
+        FROM cars c
+        JOIN cities ci ON c.city_id = ci.id
+        JOIN states s ON c.state_id = s.id
+        JOIN brands b ON c.brand_id = b.id
+        JOIN models m ON c.model_id = m.id;`, (error, results) => {
+        if (error) {
+          throw error
+        }
+        response.status(200).send(results.rows)
     })
 }
+
+const getBrands = (request, response) => {
+   
+    connectionPool.query(`SELECT * FROM brands;`, (error, results) => {
+        if (error) {
+          throw error
+        }
+        /* let columns = [];
+        for(var i=0; i<results.rows.length; i++){
+            columns.push(results.rows[i].column_name)
+        } */
+        response.status(200).send(results.rows)
+    })
+}
+
+const getStates = (request, response) => {
+   
+    connectionPool.query(`SELECT * FROM states;`, (error, results) => {
+        if (error) {
+          throw error
+        }
+        
+        response.status(200).send(results.rows)
+    })
+}
+
 
 module.exports = {
     getUsers,
@@ -154,4 +186,6 @@ module.exports = {
     register,
     logout,
     getCars,
+    getBrands,
+    getStates
 } 

@@ -64,8 +64,8 @@ function getCards(layout, dataPaginated, favorites, setFavorites){
                 alt={""}
                 title={""}
                 />
-          <p className="text-[#1B2141]">No hemos encontrado resultados para tu búsqueda...</p>
-          <p className="text-[#1B2141]">Cualquier inquietud, no dudes en contactarnos :)</p>
+          <p className="text-[#1B2141]">We could not find any results with your search...</p>
+          <p className="text-[#1B2141]">If you have doubts, feel free to reach out :)</p>
       </div>
     </div>
   }
@@ -181,8 +181,7 @@ function CarsView() {
         router.push('/login');
       })
       .catch((error) => {
-        console.log(error.message);
-          //setError(error.message);
+        setError(error.message);
       });
   }
 
@@ -235,14 +234,14 @@ function CarsView() {
           </div>
           <div className='flex flex-row items-center pt-5 pb-2 justify-between'>
             <div className="">
-              <div className="text-[#1B2141] text-sm">{totalItems + ' carros encontrados'}</div>
+              <div className="text-[#1B2141] text-sm">{totalItems + ' cars found'}</div>
             </div>
             <div className="">
               <div className="hidden lg:flex flex-row text-[#566DED] text-sm items-center gap-1 cursor-pointer"> 
                 <svg width="18" height="16" viewBox="0 0 18 16" fill="#566DED" xmlns="http://www.w3.org/2000/svg">
                   <path fillRule="evenodd" clipRule="evenodd" d="M5.27528 0.89139L8.60861 4.22472C8.85269 4.4688 8.85269 4.86453 8.60861 5.10861C8.36453 5.35268 7.9688 5.35268 7.72472 5.10861L5.45833 2.84222V11.3333C5.45833 11.6785 5.17851 11.9583 4.83333 11.9583C4.48816 11.9583 4.20833 11.6785 4.20833 11.3333V2.84222L1.94194 5.10861C1.69786 5.35268 1.30214 5.35268 1.05806 5.10861C0.813981 4.86453 0.813981 4.4688 1.05806 4.22472L4.39139 0.89139C4.45131 0.831468 4.52038 0.786256 4.59409 0.755756C4.66779 0.725198 4.74859 0.708332 4.83333 0.708332C4.91808 0.708332 4.99888 0.725198 5.07257 0.755756C5.14629 0.786256 5.21535 0.831468 5.27528 0.89139ZM12.5417 4.66667C12.5417 4.32149 12.8215 4.04167 13.1667 4.04167C13.5118 4.04167 13.7917 4.32149 13.7917 4.66667V13.1578L16.0581 10.8914C16.3021 10.6473 16.6979 10.6473 16.9419 10.8914C17.186 11.1355 17.186 11.5312 16.9419 11.7753L13.6086 15.1086C13.5487 15.1685 13.4796 15.2137 13.4059 15.2442C13.3322 15.2748 13.2514 15.2917 13.1667 15.2917C13.0819 15.2917 13.0011 15.2748 12.9274 15.2442C12.8537 15.2137 12.7846 15.1685 12.7247 15.1086L9.39139 11.7753C9.14731 11.5312 9.14731 11.1355 9.39139 10.8914C9.63547 10.6473 10.0312 10.6473 10.2753 10.8914L12.5417 13.1578V4.66667Z" fill="#566DED"/>
                 </svg>
-                Más relevantes
+                Most relevant
               </div>
               <button className="lg:hidden" onClick={layout === "grid" ? () => setLayout("list") : () => setLayout("grid")}>
                 {layout === "grid" ? 
