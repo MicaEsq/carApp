@@ -9,7 +9,7 @@ import Badge from 'i/components/Badge';
 import $ from 'jquery';
 import Pagination from 'i/components/Pagination'
 
-function formattFilters(items){
+/* function formattFilters(items){
   var filters = {};
   var brand= new Set(), model = new Set(), version = new Set(), year = new Set(), city = new Set();
   for(var i=0; i < Object.keys(items).length; i++){
@@ -27,7 +27,7 @@ function formattFilters(items){
   filters["ciudad"]=Array.from(city);
 
   return filters
-}
+} */
 
 function getFilteredData(items, setDataFiltered, filtersApplied, setTotalItems, setDataPaginated){
   const filteredArray = items.filter(item => filtersApplied.every(filter => item[filter.label] === filter.value))
@@ -103,36 +103,7 @@ function CarsView() {
  */
   useEffect(() => {
 
-      setLoading(true);
-
-      let url = 'http://localhost:3001/cars';
-      let method = 'GET';
-      let msgError = "Error, logout wasn't possible.";
-  
-      var requestOptions = {
-          method: method,
-          headers: { 'Content-Type': 'application/json'},
-      };
-      
-      fetch(url, requestOptions)
-      .then(response => {
-          if (response.ok){
-              return response.json();
-          }
-          else{
-              return response.text().then(text => {throw new Error(text)});
-          }
-      })
-      .then((response) => {
-        setData(response);
-        setTotalItems(Object.keys(response).length);
-        getFilteredData(response, setDataFiltered, filtersApplied, setTotalItems, setDataPaginated);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-          //setError(error.message);
-      });
+      getData('cars');
 
   }, [])
 
@@ -150,10 +121,60 @@ function CarsView() {
 
   useEffect(() => {
       if(modifiedFilter){
-        getFilteredData(data, setDataFiltered, filtersApplied, setTotalItems, setDataPaginated);
+        //getFilteredData(data, setDataFiltered, filtersApplied, setTotalItems, setDataPaginated);
+        let params = '';
+        for(var i=0; i<filtersApplied.length; i++){
+          if(i === filtersApplied.length-1){
+            params = params + filtersApplied[i].label + '=' + filtersApplied[i].value;
+          }
+          else{
+            params = params + filtersApplied[i].label + '=' + filtersApplied[i].value + '&';
+          }
+        }
+
+        if(params === ''){
+          getData('cars')
+        }
+        else{
+          getData('cars?' + params)
+        }
+        
         setModifiedFilter(false);
       }
   })
+
+  function getData(params){
+    setLoading(true);
+
+    let url = 'http://localhost:3001/' + params;
+    let method = 'GET';
+    let msgError = "Error, logout wasn't possible.";
+
+    var requestOptions = {
+        method: method,
+        headers: { 'Content-Type': 'application/json'},
+    };
+    
+    fetch(url, requestOptions)
+    .then(response => {
+        if (response.ok){
+            return response.json();
+        }
+        else{
+            return response.text().then(text => {throw new Error(text)});
+        }
+    })
+    .then((response) => {
+      setData(response);
+      setTotalItems(Object.keys(response).length);
+      //getFilteredData(response, setDataFiltered, filtersApplied, setTotalItems, setDataPaginated);
+      setLoading(false);
+    })
+    .catch((error) => {
+      console.log(error);
+        //setError(error.message);
+    });
+  }
 
   const handleLogout=(event)=>{
 
@@ -199,7 +220,7 @@ function CarsView() {
       <main className="flex flex-row justify-between">
         <div onClick={handleLogout}>logout</div>
         <div className="hidden max-w-sm lg:block md:w-full md:px-[37px] ">
-          <Filters data={formattFilters(data)} setFiltersApplied={setFiltersApplied} filtersApplied={filtersApplied} setModifiedFilter={setModifiedFilter}/>
+          <Filters setFiltersApplied={setFiltersApplied} filtersApplied={filtersApplied} setModifiedFilter={setModifiedFilter}/>
         </div>
         <div className="my-10 pl-6 pr-6 w-full lg:pl-0 lg:pr-14">
           <div className='grid grid-cols-5 items-center lg:items-start'>
@@ -255,7 +276,7 @@ function CarsView() {
               </button>
             </div>
           </div>
-          {getCards(layout, dataPaginated, favorites, setFavorites)}
+          {getCards(layout, data, favorites, setFavorites)}
           {dataPaginated.length !== 0 && <Pagination data={dataFiltered} total={totalItems} setDataPaginated={setDataPaginated}/>}
         </div>
       </main>

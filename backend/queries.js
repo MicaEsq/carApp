@@ -136,13 +136,59 @@ const logout = (request, response) => {
 } 
 
 const getCars = (request, response) => {
+    const brands = request.query.brands;
+    const models = request.query.models;
+    const year = request.query.year;
+    const states = request.query.states;
+    const cities = request.query.cities;
+    const transmission = request.query.transmission;
+    const price = request.query.price;
+    const mileage = request.query.mileage;
+    
+    let filtersQuery = '';
+    let query = [];
+    if(brands){
+        query.push(`b.name = '${brands}'`);
+    }
+    if(models){
+        query.push(`m.name = '${models}'`);
+    }
+    if(year){
+        query.push(`year = '${year}'`);
+    }
+    if(states){
+        query.push(`s.name = '${states}'`);
+    }
+    if(cities){
+        query.push(`ci.name = '${cities}'`);
+    }
+    if(transmission){
+        query.push(`transmission = '${transmission}'`);
+    }
+    if(price){
+        query.push(`price = '${price}'`);
+    }
+    if(mileage){
+        query.push(`mileage = '${mileage}'`);
+    } 
+
+    
+    for(var i=0; i<query.length; i++){
+        if(i === 0){
+            filtersQuery += 'WHERE ' + query[i]
+        }
+        else{
+            filtersQuery += ' AND ' + query[i]
+        }
+    }
+    
    
     connectionPool.query(`SELECT c.id, ci.name AS city_name, s.name AS state_name, c.year, b.name AS brand_name, m.name AS model_name, c.version, c.transmission, c.condition, c.price, c.mileage, c.image, c.promoted, c.financing
         FROM cars c
         JOIN cities ci ON c.city_id = ci.id
         JOIN states s ON c.state_id = s.id
         JOIN brands b ON c.brand_id = b.id
-        JOIN models m ON c.model_id = m.id;`, (error, results) => {
+        JOIN models m ON c.model_id = m.id ` + filtersQuery, (error, results) => {
         if (error) {
           throw error
         }
@@ -150,7 +196,7 @@ const getCars = (request, response) => {
     })
 }
 
-const getBrands = (request, response) => {
+/* const getBrands = (request, response) => {
    
     connectionPool.query(`SELECT * FROM brands;`, (error, results) => {
         if (error) {
@@ -159,7 +205,7 @@ const getBrands = (request, response) => {
         /* let columns = [];
         for(var i=0; i<results.rows.length; i++){
             columns.push(results.rows[i].column_name)
-        } */
+        } 
         response.status(200).send(results.rows)
     })
 }
@@ -173,6 +219,38 @@ const getStates = (request, response) => {
         
         response.status(200).send(results.rows)
     })
+} */
+
+const getFilters = (request, response) => {
+    const { primaryFilter, type } = request.body
+    if(primaryFilter === ''){
+        connectionPool.query('SELECT * FROM ' + type + ';', (error, results) => {
+            if (error) {
+            throw error
+            }
+            /* let columns = [];
+            for(var i=0; i<results.rows.length; i++){
+                columns.push(results.rows[i].column_name)
+            } */
+            response.status(200).send(results.rows)
+        })
+    }
+    else{
+        let typePrimaryFilter = '';
+        if(type === "models"){
+            typePrimaryFilter = 'brand'
+        }
+        else if(type === "cities"){
+            typePrimaryFilter = 'state'
+        }
+
+        connectionPool.query('SELECT * FROM ' + type + ' WHERE ' + typePrimaryFilter + '_id = ' + primaryFilter + ';', (error, results) => {
+            if (error) {
+            throw error
+            }
+            response.status(200).send(results.rows)
+        })
+    }
 }
 
 
@@ -186,6 +264,5 @@ module.exports = {
     register,
     logout,
     getCars,
-    getBrands,
-    getStates
+    getFilters
 } 
