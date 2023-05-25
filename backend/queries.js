@@ -121,18 +121,18 @@ const login = (request, response, next) => {
 
 const logout = (request, response) => {
     
-    /* request.session.destroy((error) => {
-        if(error){
+    //request.session.destroy((error) => {
+        /* if(error){
             console.error('error destroying session: ', error);
             // Handle the error appropriately
             response.sendStatus(500);
         }
-        else{
+        else{ */
             console.log('Session deleted from database successfully');
             // Redirect the user to the login page or any other appropriate action
             response.sendStatus(200);
-        }
-    }); */
+        //}
+    //}); 
 } 
 
 const getCars = (request, response) => {
