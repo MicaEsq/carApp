@@ -34,6 +34,8 @@ export default function Navbar() {
       });
   }
 
+  
+
   return (
     <header className="bg-white border-b ">
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
@@ -45,6 +47,11 @@ export default function Navbar() {
                     src="favicon.ico"
                     alt="Car app company"
                 />          
+            </a>
+        </div>
+        <div className=" lg:flex lg:flex-1 lg:justify-end">
+            <a href="/newCar" className="text-sm font-semibold leading-6 text-indigo-500" onClick={()=>handleCreation()}> 
+                create car 
             </a>
         </div>
         <div className=" lg:flex lg:flex-1 lg:justify-end">

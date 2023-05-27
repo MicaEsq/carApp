@@ -36,9 +36,9 @@ app.post('/register', db.register)
 app.post('/login', db.login) 
 app.get('/logout', db.logout)
 app.get('/cars', db.getCars)
-/* app.get('/brands', db.getBrands)
-app.get('/states', db.getStates) */
+app.post('/newCar', db.createCar)
 app.post('/filters', db.getFilters)
+app.get('/brands', db.getBrands)
 
 app.listen(port, () => {
     console.log(`App running on port ${port}.`)

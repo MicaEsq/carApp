@@ -196,21 +196,65 @@ const getCars = (request, response) => {
     })
 }
 
-/* const getBrands = (request, response) => {
+const createCar = (request, response) => {
+    //const { name, email } = request.body
+    console.log(request.body)
+    /* connectionPool.query('INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *', [name, email], (error, results) => {
+      if (error) {
+        response.status(404).send({message:`User could not be added`})
+      }
+      else{
+        response.status(201).send({message:`User added with ID: ${results.rows[0].id}`})
+      }
+      
+    }) */
+}
+
+const updateCar = (request, response) => {
+    const id = parseInt(request.params.id)
+    const { name, email } = request.body
+  
+    connectionPool.query('UPDATE users SET name = $1, email = $2 WHERE id = $3', [name, email, id], (error, results) => {
+        if (error) {
+            response.status(400).send({message:`User could not be modified`})
+        }
+        else{
+            response.status(200).send({message:`User modified with ID: ${id}`})
+        }
+      }
+    )
+}
+
+const deleteCar = (request, response) => {
+    const id = parseInt(request.params.id)
+  
+    connectionPool.query('DELETE FROM users WHERE id = $1', [id], (error, results) => {
+      if (error) {
+        response.status(400).send({message:`User could not be deleted`})
+      }
+      else{
+        response.status(200).send({message:`User deleted with ID: ${id}`})
+      }
+      
+    })
+}
+
+const getBrands = (request, response) => {
    
     connectionPool.query(`SELECT * FROM brands;`, (error, results) => {
         if (error) {
           throw error
         }
+
         /* let columns = [];
         for(var i=0; i<results.rows.length; i++){
             columns.push(results.rows[i].column_name)
-        } 
+        }  */
         response.status(200).send(results.rows)
     })
 }
 
-const getStates = (request, response) => {
+/*const getStates = (request, response) => {
    
     connectionPool.query(`SELECT * FROM states;`, (error, results) => {
         if (error) {
@@ -264,5 +308,7 @@ module.exports = {
     register,
     logout,
     getCars,
-    getFilters
+    getFilters,
+    createCar,
+    getBrands
 } 
