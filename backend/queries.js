@@ -254,7 +254,7 @@ const getBrands = (request, response) => {
     })
 }
 
-/*const getStates = (request, response) => {
+const getStates = (request, response) => {
    
     connectionPool.query(`SELECT * FROM states;`, (error, results) => {
         if (error) {
@@ -263,7 +263,7 @@ const getBrands = (request, response) => {
         
         response.status(200).send(results.rows)
     })
-} */
+} 
 
 const getFilters = (request, response) => {
     const { primaryFilter, type } = request.body
@@ -279,7 +279,7 @@ const getFilters = (request, response) => {
             response.status(200).send(results.rows)
         })
     }
-    else{
+    else if(type === 'models' || type === 'cities'){
         let typePrimaryFilter = '';
         if(type === "models"){
             typePrimaryFilter = 'brand'
@@ -287,6 +287,30 @@ const getFilters = (request, response) => {
         else if(type === "cities"){
             typePrimaryFilter = 'state'
         }
+
+        connectionPool.query('SELECT * FROM ' + type + ' WHERE ' + typePrimaryFilter + '_id = ' + primaryFilter + ';', (error, results) => {
+            if (error) {
+            throw error
+            }
+            response.status(200).send(results.rows)
+        })
+    }
+    else if(type === 'brands' || type === 'states'){
+        let typePrimaryFilter = '';
+        if(type === "models"){
+            typePrimaryFilter = 'brand'
+        }
+        else if(type === "cities"){
+            typePrimaryFilter = 'state'
+        }
+
+        let brandsIds = '';
+        connectionPool.query('SELECT * FROM ' + models + ' WHERE name=' + 500 + ';', (error, results) => {
+            if (error) {
+            throw error
+            }
+            response.status(200).send(results.rows)
+        })
 
         connectionPool.query('SELECT * FROM ' + type + ' WHERE ' + typePrimaryFilter + '_id = ' + primaryFilter + ';', (error, results) => {
             if (error) {
