@@ -297,27 +297,30 @@ const getFilters = (request, response) => {
     }
     else if(type === 'brands' || type === 'states'){
         let typePrimaryFilter = '';
-        if(type === "models"){
-            typePrimaryFilter = 'brand'
+        if(type === "brands"){
+            typePrimaryFilter = 'models'
+            connectionPool.query(`SELECT models.brand_id AS id, brands.name AS name
+            FROM models
+            JOIN brands ON models.brand_id = brands.id
+            WHERE models.name = '` + primaryFilter + `';`, (error, results) => {
+                if (error) {
+                throw error
+                }
+                response.status(200).send(results.rows);
+            })
         }
-        else if(type === "cities"){
-            typePrimaryFilter = 'state'
+        else if(type === "states"){
+            typePrimaryFilter = 'cities'
+            connectionPool.query(`SELECT cities.state_id AS id, states.name AS name
+            FROM cities
+            JOIN states ON cities.state_id = states.id
+            WHERE cities.id = '` + primaryFilter + `';`, (error, results) => {
+                if (error) {
+                throw error
+                }
+                response.status(200).send(results.rows);
+            })
         }
-
-        let brandsIds = '';
-        connectionPool.query('SELECT * FROM ' + models + ' WHERE name=' + 500 + ';', (error, results) => {
-            if (error) {
-            throw error
-            }
-            response.status(200).send(results.rows)
-        })
-
-        connectionPool.query('SELECT * FROM ' + type + ' WHERE ' + typePrimaryFilter + '_id = ' + primaryFilter + ';', (error, results) => {
-            if (error) {
-            throw error
-            }
-            response.status(200).send(results.rows)
-        })
     }
 }
 

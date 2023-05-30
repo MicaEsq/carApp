@@ -12,6 +12,10 @@ export default function NewCar(){
     const [selectedState, setSelectedState] = useState({});
     const [cities, setCities] = useState([]);
     const [selectedCity, setSelectedCity] = useState({});
+    const [selectedTransimission, setSelectedTransimission] = useState([]);
+    const [selectedPromoted, setSelectedPromoted] = useState([]);
+    const [selectedFinancing, setSelectedFinancing] = useState([]);
+    const [selectedCondition, setSelectedCondition] = useState([]);
     const [loading, setLoading] = useState('');
 
     const prevSelectedBrandRef = useRef();
@@ -24,9 +28,11 @@ export default function NewCar(){
         getFilters('brands', '');
         prevSelectedBrandRef.current = selectedBrand;
         getFilters('models', '');
+        prevSelectedModelRef.current = selectedModel;
         getFilters('states', '');
         prevSelectedStateRef.current = selectedState;
         getFilters('cities', '');
+        prevSelectedCityRef.current = selectedCity;
   
     }, [])
 
@@ -40,12 +46,16 @@ export default function NewCar(){
             prevSelectedStateRef.current = selectedState;
         }        
         else if(prevSelectedModelRef.current !== selectedModel){
-            getFilters('brands', selectedModel.id);
+            getFilters('brands', selectedModel.name);
             prevSelectedModelRef.current = selectedModel;
+        }
+        else if(prevSelectedCityRef.current !== selectedCity){
+          getFilters('states', selectedCity.id);
+          prevSelectedCityRef.current = selectedCity;
         } 
     
         
-    }, [selectedBrand, selectedState])
+    }, [selectedBrand, selectedState, selectedModel, selectedCity])
 
 
     function getFilters(extension, primary){
@@ -187,8 +197,8 @@ export default function NewCar(){
             Create a new Car
         </h2>
         <div className="z-0 grid gap-4 grid-cols-3 grid-rows-3 mt-10 space-y-6 ">
-            <div>
-                <Dropdown label='Brand' selectedOption={selectedBrand} setSelectedOption={setSelectedBrand} allOptions={brands} fetchWhenSelected={getFilters}/>
+            <div className='relative'>
+                <Dropdown label='Brand' selectedOption={selectedBrand} setSelectedOption={setSelectedBrand} allOptions={brands}/>
             </div>
             <div>
                 <Dropdown label='Model' selectedOption={selectedModel} setSelectedOption={setSelectedModel} allOptions={models}/>
@@ -208,18 +218,10 @@ export default function NewCar(){
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium leading-6 text-gray-900">Transmission</label>
-            <div className="mt-2">
-              <input name="version" required className="block w-full rounded-md border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
-                /* onChange={handleEmailChange} */ />
-            </div>
+            <Dropdown label='Transmission' selectedOption={selectedTransimission} setSelectedOption={setSelectedTransimission} allOptions={[{id:1, name:'Automatic'}, {id:2, name:'Manual'}]}/>
           </div>
           <div>
-            <label className="block text-sm font-medium leading-6 text-gray-900">Condition</label>
-            <div className="mt-2">
-              <input name="condition" required className="block w-full rounded-md border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
-                /* onChange={handleEmailChange} */ />
-            </div>
+            <Dropdown label='Condition' selectedOption={selectedCondition} setSelectedOption={setSelectedCondition} allOptions={[{id:1, name:'New'}, {id:2, name:'Used'}]}/>
           </div>
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Price</label>
@@ -236,11 +238,7 @@ export default function NewCar(){
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium leading-6 text-gray-900">Promoted</label>
-            <div className="mt-2">
-              <input name="promoted" required className="block w-full rounded-md border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
-                /* onChange={handleEmailChange} */ />
-            </div>
+            <Dropdown label='Promoted' selectedOption={selectedPromoted} setSelectedOption={setSelectedPromoted} allOptions={[{id:1, name:'Yes'}, {id:2, name:'No'}]}/>
           </div>
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Financing</label>
