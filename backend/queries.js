@@ -197,17 +197,17 @@ const getCars = (request, response) => {
 }
 
 const createCar = (request, response) => {
-    //const { name, email } = request.body
-    console.log(request.body)
-    /* connectionPool.query('INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *', [name, email], (error, results) => {
+    const { brand_id, model_id, state_id, city_id, year, version, transmission, condition, price, mileage, promoted,financing } = request.body
+    //console.log(request.body)
+    connectionPool.query('INSERT INTO cars (brand_id, model_id, state_id, city_id, year, version, transmission, condition, price, mileage, promoted,financing) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *', [brand_id, model_id, state_id, city_id, year, version, transmission, condition, price, mileage, promoted,financing], (error, results) => {
       if (error) {
-        response.status(404).send({message:`User could not be added`})
+        response.status(404).send({message:`Car could not be added`})
       }
       else{
-        response.status(201).send({message:`User added with ID: ${results.rows[0].id}`})
+        response.status(201).send({message:`Car added with ID: ${results.rows[0].id}`})
       }
       
-    }) */
+    })
 }
 
 const updateCar = (request, response) => {
@@ -336,6 +336,5 @@ module.exports = {
     logout,
     getCars,
     getFilters,
-    createCar,
-    getBrands
+    createCar
 } 

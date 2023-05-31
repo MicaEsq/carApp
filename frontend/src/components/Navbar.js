@@ -50,7 +50,7 @@ export default function Navbar() {
             </a>
         </div>
         <div className=" lg:flex lg:flex-1 lg:justify-end">
-            <a href="/newCar" className="text-sm font-semibold leading-6 text-indigo-500" onClick={()=>handleCreation()}> 
+            <a href="/newCar" className="text-sm font-semibold leading-6 text-indigo-500"> 
                 create car 
             </a>
         </div>
