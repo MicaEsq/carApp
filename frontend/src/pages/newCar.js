@@ -176,7 +176,7 @@ export default function NewCar(){
             Create a new Car
         </h2>
         <div className="grid gap-4 grid-cols-4 grid-rows-3 mt-10 space-y-6 px-6">
-            <div>
+            <div className='mt-6'>
                 <Dropdown label='Brand' selectedOption={selectedBrand} setSelectedOption={setSelectedBrand} allOptions={brands}/>
             </div>
             <div>
