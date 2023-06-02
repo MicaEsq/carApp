@@ -21,6 +21,7 @@ export default function NewCar(){
   const [selectedPrice, setSelectedPrice] = useState('');
   const [selectedMileage, setSelectedMileage] = useState('');
   const [loading, setLoading] = useState('');
+  const [error, setError] = useState('');
 
   const router = useRouter();
 
@@ -65,7 +66,6 @@ export default function NewCar(){
   function getFilters(extension, primary){
       let url = 'http://localhost:3001/filters';
       let method = 'POST';
-      let msgError = "Error, filters could not be loaded.";
       let data = {primaryFilter: primary, type: extension };
       var requestOptions = {};
 
@@ -97,13 +97,12 @@ export default function NewCar(){
         else if(extension === 'cities'){
           setCities(response)
         }
-        else{
-
-        }
+        else{}
+        
+        setError('');
       })
       .catch((error) => {
-        console.log(error);
-          //setError(error.message);
+          setError(error.message);
       });
   }
   
@@ -114,7 +113,6 @@ export default function NewCar(){
   }
     
   const handleChange=(event)=>{
-    console.log(event.target.value);
     if(event.target.name === 'year'){
       setSelectedYear(event.target.value);
     }
@@ -127,9 +125,7 @@ export default function NewCar(){
     else if(event.target.name === 'mileage'){
       setSelectedMileage(event.target.value);
     }
-    else{
-
-    }
+    else{}
   }
   
 
@@ -138,13 +134,12 @@ export default function NewCar(){
     
     let url = 'http://localhost:3001/newCar';
     let method = 'POST';
-    let msgError = "Error, .";
     let data = formatData();
 
     var requestOptions = {
-            method: method,
-            headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
+      method: method,
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
     };
     
     fetch(url, requestOptions)
@@ -157,12 +152,11 @@ export default function NewCar(){
         }
     })
     .then(([responseOk, body]) => {
-        
         router.push('/');
-        //window.location.replace('/');
+        setError('');
     })
     .catch((error) => {
-        //setError(error.message);
+        setError(error.message);
     });
   };
 
@@ -175,7 +169,10 @@ export default function NewCar(){
         <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Create a new Car
         </h2>
-        <div className="grid gap-4 grid-cols-4 grid-rows-3 mt-10 space-y-6 px-6">
+        <h3 className="text-sm leading-9 tracking-tight text-gray-900">
+            All fields with an * are Required
+        </h3>
+        <div className="grid gap-4 grid-cols-3 mt-10 space-y-6 px-6 shadow-md rounded-lg pb-5">
             <div className='mt-6'>
                 <Dropdown label='Brand' selectedOption={selectedBrand} setSelectedOption={setSelectedBrand} allOptions={brands}/>
             </div>
@@ -185,14 +182,14 @@ export default function NewCar(){
             <div>
                 <label className="block text-sm font-medium leading-6 text-gray-900">Version</label>
                 <div className="mt-2">
-                <input name="version" required className="block w-full rounded-md border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                <input name="version" required className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                     onChange={handleChange}/>
                 </div>
             </div>
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Year</label>
             <div className="mt-2">
-              <input name="year" required className="block w-full rounded-md border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+              <input name="year" required className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                 onChange={handleChange} />
             </div>
           </div>
@@ -205,14 +202,14 @@ export default function NewCar(){
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Price</label>
             <div className="mt-2">
-              <input name="price" required className="block w-full rounded-md border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+              <input name="price" required className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                 onChange={handleChange}/>
             </div>
           </div>
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Mileage</label>
             <div className="mt-2">
-              <input name="mileage" required className="block w-full rounded-md border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+              <input name="mileage" required className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                 onChange={handleChange}/>
             </div>
           </div>
@@ -255,7 +252,7 @@ export default function NewCar(){
           <div className=''>
             <button
               type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+              className="flex w-full justify-center rounded-lg bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
               onClick={handleSubmit}
             >
               Sign in

@@ -290,6 +290,7 @@ const getFilters = (request, response) => {
 
         connectionPool.query('SELECT * FROM ' + type + ' WHERE ' + typePrimaryFilter + '_id = ' + primaryFilter + ';', (error, results) => {
             if (error) {
+                response.status(500).send({message:`Problem with the query`})
             throw error
             }
             response.status(200).send(results.rows)
