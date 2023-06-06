@@ -29,25 +29,34 @@ export default function Dropdown({label, selectedOption, setSelectedOption, allO
         leaveTo="opacity-0"
         >
             <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-            {allOptions.map((option) => (
-            <Listbox.Option
-                key={option.id}
-                className={({ active }) =>
-                classNames(
-                    active ? 'bg-indigo-600 text-white' : 'text-gray-900',
-                    'relative cursor-default select-none py-2 pl-3 pr-9'
-                )}
-                value={option}
-            >
-                {({ selected, active }) => (
-                <>
-                    <div className="flex items-center">
-                    <span className={classNames(selected ? 'font-semibold' : 'font-normal', 'ml-3 block truncate')}>
-                        {option.name}
-                    </span>
-                    </div>
-                </>)}
-            </Listbox.Option>))}
+                {allOptions.length === 0 ? (
+                    <Listbox.Option disabled>
+                        <div className="flex items-center">
+                            <span className='font-normal ml-3 py-1 text-gray-400'>
+                                No options found
+                            </span>
+                        </div>
+                    </Listbox.Option>) : (
+                    allOptions.map((option) => (
+                    <Listbox.Option
+                        key={option.id}
+                        className={({ active }) =>
+                        classNames(
+                            active ? 'bg-indigo-600 text-white' : 'text-gray-900',
+                            'relative cursor-default select-none py-2 pl-3 pr-9'
+                        )}
+                        value={option}
+                    >
+                        {({ selected, active }) => (
+                        <>
+                            <div className="flex items-center">
+                            <span className={classNames(selected ? 'font-semibold' : 'font-normal', 'ml-3 block truncate')}>
+                                {option.name}
+                            </span>
+                            </div>
+                        </>)}
+                    </Listbox.Option>
+                )))}
         </Listbox.Options>
         </Transition>
     </div>

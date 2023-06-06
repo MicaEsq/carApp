@@ -26,7 +26,7 @@ export default function Navbar() {
               return response.text().then(text => {throw new Error(text)});
           }
       })
-      .then(([responseOk]) => {console.log('entra a logout')
+      .then(([responseOk]) => {
         router.push('/login');
       })
       .catch((error) => {
@@ -40,11 +40,11 @@ export default function Navbar() {
     <header className="bg-white border-b ">
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
         <div className="flex lg:flex-1">
-            <a href="#" className="-m-1.5 p-1.5">
+            <a href="/" className="-m-1.5 p-1.5">
                 <span className="sr-only text-indigo-500">Car app company</span>
                 <img
                     className="mx-auto h-10 w-auto"
-                    src="favicon.ico"
+                    src="/favicon.ico"
                     alt="Car app company"
                 />          
             </a>

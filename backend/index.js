@@ -38,6 +38,7 @@ app.get('/logout', db.logout)
 app.get('/cars', db.getCars)
 app.post('/newCar', db.createCar)
 app.post('/filters', db.getFilters)
+app.get('/cars/:id', db.getCarById)
 //app.get('/brands', db.getBrands)
 
 app.listen(port, () => {

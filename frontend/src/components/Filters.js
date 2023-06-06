@@ -6,6 +6,7 @@ export default function Filters({setFiltersApplied, filtersApplied, setModifiedF
   const [filters, setFilters] = useState(['brand', 'model', 'year', 'state', 'city', 'transmission', 'price', 'mileage']);
   const [filters2, setFilters2] = useState([{type:'brands', values:[]}, {type:'models', values:[]}, {type:'year', values:[]}, {type:'states', values:[]}, {type:'cities', values:[]}, {type:'transmission', values:[{id:1, name:'Automatic'}, {id:2, name:'Manual'}]}, {type:'price', values:[]}, {type:'mileage', values:[{id:1, value:'35.000 or less'}, {id:2, value:'35.000 to 60.000 km'}, {id:3, value:'60.000 to 80.000 km'}, {id:4, value:'80.000 to 100.000'}, {id:5, value:'100.000 km or more'}]}]);
   const [error, setError] = useState('');
+
   const prevFiltersApplied = useRef();
 
   useEffect(() => {
@@ -21,9 +22,8 @@ export default function Filters({setFiltersApplied, filtersApplied, setModifiedF
   useEffect(() => {
     if(prevFiltersApplied.current !== filtersApplied){
         let lastFilterApplied = filtersApplied.filter(x => prevFiltersApplied.current.indexOf(x) === -1);
-        console.log(lastFilterApplied);
+   
         if(lastFilterApplied[0].label === 'brands'){
-          console.log('entre a brands', lastFilterApplied);
           getFilters('models', lastFilterApplied[0].idOption);
           prevFiltersApplied.current = filtersApplied;
         }
@@ -54,7 +54,7 @@ export default function Filters({setFiltersApplied, filtersApplied, setModifiedF
           headers: { 'Content-Type': 'application/json'},
           body: JSON.stringify(data)
       };
-     
+      
       fetch(url, requestOptions)
       .then(response => {
           if (response.ok){
@@ -65,30 +65,28 @@ export default function Filters({setFiltersApplied, filtersApplied, setModifiedF
           }
       })
       .then(([responseOk, response]) => {
+        const updatedFilters2 = [...filters2];
         if(primary === ''){
-          for(var i=0; i < filters2.length; i++){
-            if(filters2[i].type === extension){
-              filters2[i].values = response;
-            }
+          const filterIndex = updatedFilters2.findIndex(filter => filter.type === extension);
+          if (filterIndex !== -1) {
+            updatedFilters2[filterIndex].values = response;
           }
         }
         else{
-          console.log('entro a else');
           if(extension === 'brands'){
-            filters2[0].values = response;
-            console.log('entro a else brands');
+            updatedFilters2[0].values = response;
           }
           else if(extension === 'models'){
-            filters2[1].values = response;
-            console.log('entro a else models'); //missing re render of buttons
+            updatedFilters2[1].values = response;
           }
           else if(extension === 'states'){
-            filters2[3].values = response;
+            updatedFilters2[3].values = response;
           }
           else if(extension === 'cities'){
-            filters2[4].values = response;
+            updatedFilters2[4].values = response;
           }
         }
+        setFilters2(updatedFilters2);
         
         setError('');
       })
@@ -250,7 +248,7 @@ export default function Filters({setFiltersApplied, filtersApplied, setModifiedF
   }
 
   return (
-    <div className="flex flex-col bg-white mt-16 rounded-lg">{console.log(filters2)}
+    <div className="flex flex-col bg-white mt-16 rounded-lg">
       {filters.map((filter, index) => {
         return <Disclosure key={filter}>
           {({ open }) => ( 

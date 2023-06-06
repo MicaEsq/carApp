@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 function Carousel({image}) {
   // setting some random images besides the one of the car to show the change of images
-  const [images, setImages] = useState(['images/landscape.jpg', 'images/landscape2.jpg', 'images/landscape3.jpg', 'images/landscape4.jpg']);
+  const [images, setImages] = useState(['/images/landscape.jpg', '/images/landscape2.jpg', '/images/landscape3.jpg', '/images/landscape4.jpg']);
 
   const [currentImageIndex, setcurrentImageIndex] = useState(0);
 

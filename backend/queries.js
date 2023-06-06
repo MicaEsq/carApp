@@ -196,15 +196,38 @@ const getCars = (request, response) => {
     })
 }
 
+const getCarById = (request, response) => {
+    const id = parseInt(request.params.id)
+
+    connectionPool.query(`SELECT c.id, ci.name AS city_name, s.name AS state_name, c.year, b.name AS brand_name, m.name AS model_name, c.version, c.transmission, c.condition, c.price, c.mileage, c.image, c.promoted, c.financing
+        FROM cars c
+        LEFT JOIN cities ci ON c.city_id = ci.id
+        LEFT JOIN states s ON c.state_id = s.id
+        LEFT JOIN brands b ON c.brand_id = b.id
+        LEFT JOIN models m ON c.model_id = m.id
+        WHERE c.id = $1;`, [id], (error, results) => {
+    
+        if (error) {
+            response.status(404).send({message: `The is no car with id: ${id}`})
+        }
+        else{
+            response.status(200).send(results.rows[0])
+        }
+        
+    })
+}
+
 const createCar = (request, response) => {
     const { brand_id, model_id, state_id, city_id, year, version, transmission, condition, price, mileage, promoted,financing } = request.body
-    //console.log(request.body)
+    console.log(request.body)
     connectionPool.query('INSERT INTO cars (brand_id, model_id, state_id, city_id, year, version, transmission, condition, price, mileage, promoted,financing) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *', [brand_id, model_id, state_id, city_id, year, version, transmission, condition, price, mileage, promoted,financing], (error, results) => {
       if (error) {
         response.status(404).send({message:`Car could not be added`})
+        throw error;
       }
       else{
-        response.status(201).send({message:`Car added with ID: ${results.rows[0].id}`})
+        console.log(results.rows[0].id);
+        response.status(200).send({id:`${results.rows[0].id}`})
       }
       
     })
@@ -272,10 +295,6 @@ const getFilters = (request, response) => {
             if (error) {
             throw error
             }
-            /* let columns = [];
-            for(var i=0; i<results.rows.length; i++){
-                columns.push(results.rows[i].column_name)
-            } */
             response.status(200).send(results.rows)
         })
     }
@@ -337,5 +356,6 @@ module.exports = {
     logout,
     getCars,
     getFilters,
+    getCarById,
     createCar
 } 
