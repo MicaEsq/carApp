@@ -208,7 +208,11 @@ const getCarById = (request, response) => {
         WHERE c.id = $1;`, [id], (error, results) => {
     
         if (error) {
-            response.status(404).send({message: `The is no car with id: ${id}`})
+            response.status(404).send({message: `There is no car with id: ${id}`})
+            throw error;
+        }
+        else if(results.rows[0] === undefined){
+            response.status(404).send({message: `There is no car with id: ${id}`})
         }
         else{
             response.status(200).send(results.rows[0])
@@ -219,14 +223,13 @@ const getCarById = (request, response) => {
 
 const createCar = (request, response) => {
     const { brand_id, model_id, state_id, city_id, year, version, transmission, condition, price, mileage, promoted,financing } = request.body
-    console.log(request.body)
+   
     connectionPool.query('INSERT INTO cars (brand_id, model_id, state_id, city_id, year, version, transmission, condition, price, mileage, promoted,financing) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *', [brand_id, model_id, state_id, city_id, year, version, transmission, condition, price, mileage, promoted,financing], (error, results) => {
       if (error) {
         response.status(404).send({message:`Car could not be added`})
         throw error;
       }
       else{
-        console.log(results.rows[0].id);
         response.status(200).send({id:`${results.rows[0].id}`})
       }
       

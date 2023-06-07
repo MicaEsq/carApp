@@ -5,15 +5,16 @@ import Badge from 'i/components/Badge';
 import Carousel from 'i/components/Carousel';
 import { modifyFavorites } from 'i/reusableFunctions/modifyFavorites';
 import Navbar from 'i/components/Navbar';
+import Error404 from 'i/components/Error404';
 
 function CarView() {
   const router = useRouter();
   const [carData, setCarData] = useState([]);
   const [loading, setLoading] = useState([]);
-  const [error, setError] = useState([]);
+  const [error, setError] = useState();
+  const { id } = router.query;
 
   useEffect(() => {
-    const { id } = router.query;
     if(id){
       setLoading(true);
       const fetchData = async () => {
@@ -36,10 +37,26 @@ function CarView() {
     }
   }, [router.query]);
 
+  const handlePageChange = () => {
+    router.push('/');
+  };
+
   return (
     <>
     <Navbar></Navbar>
-    {loading ? (<div>Loadeandooooo</div>) : ( <div key={carData.id} className="my-5 mb-3 bg-[#ffffff] rounded-lg shadow-md">
+    {loading && <div>Lodeanding</div>}
+    {error ? <div className='flex flex-col justify-center items-center'>
+      <Error404 message={`There aren't any cars with id: ${id}`}/>
+      <div className='mt-5'>
+          <button
+            type="submit"
+            className="flex justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+            onClick={handlePageChange}
+          >
+            Go back to catalogue
+          </button>
+      </div>
+      </div> : <div key={carData.id} className="my-5 mb-3 bg-[#ffffff] rounded-lg shadow-md">
         <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-900 p-5">
             {carData.brand_name + ' ' + carData.model_name} - {carData.version}
         </h2>
@@ -85,7 +102,8 @@ function CarView() {
           </div>
         </div>
       }
-    </div>)}
+    </div>}
+    
     </>
   );
 }

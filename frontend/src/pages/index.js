@@ -9,6 +9,7 @@ import Badge from 'i/components/Badge';
 import $ from 'jquery';
 import Pagination from 'i/components/Pagination'
 import Navbar from 'i/components/Navbar'
+import Error404 from 'i/components/Error404';
 
 /* function formattFilters(items){
   var filters = {};
@@ -55,25 +56,10 @@ function getCards(layout, dataPaginated, favorites, setFavorites){
     }
   }
   else{
-    return <div className="flex justify-center mt-5">
-      <div className="flex flex-col items-center">
-          <img
-                src={'images/carNotFound.png'}
-                className="rounded-lg relative z-1"
-                height={"30%"}
-                width={"30%"}
-                alt={""}
-                title={""}
-                />
-          <p className="text-[#1B2141]">We could not find any results with your search...</p>
-          <p className="text-[#1B2141]">If you have doubts, feel free to reach out :)</p>
-      </div>
-    </div>
+    return <Error404 message={'We could not find any results with your search...'}/>
   }
   
 }
-
-
 
 
 function CarsView() {
