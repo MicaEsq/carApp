@@ -37,13 +37,42 @@ function CarView() {
     }
   }, [router.query]);
 
-  const handlePageChange = () => {
-    router.push('/');
+  async function handleDeleteCar(){
+    setLoading(true);
+
+    let url = 'http://localhost:3001/' + `cars/${id}`;
+
+    var requestOptions = {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json'},
+    };
+    
+    await fetch(url, requestOptions)
+    .then(response => {
+        if (response.ok){
+            return response.json();
+        }
+        else{
+            return response.text().then(text => {throw new Error(text)});
+        }
+    })
+    .then((response) => {
+      router.push('/');
+      setLoading(false);
+    })
+    .catch((error) => {
+      setError(error.message);
+    });
   };
 
   return (
     <>
     <Navbar></Navbar>
+    <p className="mt-10 mx-5 text-sm text-gray-500">
+      <a href="/" className="font-semibold leading-6 text-indigo-500 hover:text-indigo-400">
+        {'Back to catalogue'}
+      </a>
+    </p>
     {loading && <div>Lodeanding</div>}
     {error ? <div className='flex flex-col justify-center items-center'>
       <Error404 message={`There aren't any cars with id: ${id}`}/>
@@ -51,15 +80,27 @@ function CarView() {
           <button
             type="submit"
             className="flex justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-            onClick={handlePageChange}
+            onClick={()=>router.push('/')}
           >
             Go back to catalogue
           </button>
       </div>
-      </div> : <div key={carData.id} className="my-5 mb-3 bg-[#ffffff] rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-900 p-5">
-            {carData.brand_name + ' ' + carData.model_name} - {carData.version}
-        </h2>
+      </div> : <div key={carData.id} className="my-5 mx-5 bg-[#ffffff] rounded-lg shadow-md">
+        <div className='flex flex-row items-center'>
+          <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-900 p-5">
+              {carData.brand.name + ' ' + carData.model.name} - {carData.version}
+          </h2>
+          <div>
+            <svg onClick={()=>router.push(`/modifyCar/${carData.id}`)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+            </svg>
+          </div>
+          <div>
+            <svg onClick={handleDeleteCar} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+            </svg>
+          </div>
+        </div>
         {<div className="grid grid-cols-2  justify-between relative m-2 px-5 pb-5">
           <div className="w-4/5 relative p-5">
             {/* <button className="rounded-full bg-white absolute z-10 top-2 right-2 p-1.5" onClick={() => setFavorites(modifyFavorites(carData, favorites))}>
@@ -81,7 +122,7 @@ function CarView() {
                 <Badge data={Number(carData.mileage).toLocaleString('spa') + ' km'} type={"card-details"}/>
               </div>
               <h3 className="text-base text-[#1B2141] font-bold mt-2">
-                  {carData.brand_name + ' ' + carData.model_name}
+                {carData.brand.name + ' ' + carData.model.name}
               </h3>
               <p className="text-base text-[#1B2141] font-light">{carData.version}</p>
               <p className="text-[22px] text-[#FF7042] mt-2">{"$ " + Number(carData.price).toLocaleString('spa')}</p>
@@ -90,7 +131,7 @@ function CarView() {
                   <path d="M6.94263 12.9333L9.7713 10.1047C10.5171 9.35876 11.0251 8.40845 11.2308 7.3739C11.4366 6.33934 11.331 5.267 10.9273 4.29247C10.5236 3.31795 9.84003 2.48501 8.96297 1.89899C8.08592 1.31297 7.05478 1.00018 5.99996 1.00018C4.94514 1.00018 3.91401 1.31297 3.03695 1.89899C2.15989 2.48501 1.47631 3.31795 1.07263 4.29247C0.668955 5.267 0.563321 6.33934 0.769087 7.3739C0.974852 8.40845 1.48278 9.35876 2.22863 10.1047L5.05796 12.9333C5.18167 13.0571 5.32856 13.1554 5.49026 13.2224C5.65195 13.2894 5.82526 13.3239 6.0003 13.3239C6.17533 13.3239 6.34864 13.2894 6.51033 13.2224C6.67203 13.1554 6.81892 13.0571 6.94263 12.9333Z" stroke="#87899C" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M7.41418 7.74754C7.78925 7.37246 7.99996 6.86375 7.99996 6.33332C7.99996 5.80289 7.78925 5.29418 7.41418 4.91911C7.0391 4.54404 6.53039 4.33332 5.99996 4.33332C5.46953 4.33332 4.96082 4.54404 4.58575 4.91911C4.21068 5.29418 3.99996 5.80289 3.99996 6.33332C3.99996 6.86375 4.21068 7.37246 4.58575 7.74754C4.96082 8.12261 5.46953 8.33332 5.99996 8.33332C6.53039 8.33332 7.0391 8.12261 7.41418 7.74754Z" stroke="#87899C" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                <h5 className="text-sm text-[#87899C] font-light ml-1">{carData.city_name + ', ' + carData.state_name}</h5>
+                <h5 className="text-sm text-[#87899C] font-light ml-1">{carData.city.name + ', ' + carData.state.name}</h5>
               </div>
               {carData.financing ? <Link href="" className="flex flex-row items-center mt-2 ml-1 text-sm font-bold text-[#566DED]">
                 <svg width="15" height="16" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1">

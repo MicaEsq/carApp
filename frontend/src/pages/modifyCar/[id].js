@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import Navbar from 'i/components/Navbar';
 import Dropdown from 'i/components/Dropdown';
 
-export default function NewCar(){
+export default function ModifyCar(){
 
   const [brands, setBrands] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState("");
@@ -14,22 +14,65 @@ export default function NewCar(){
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedTransimission, setSelectedTransimission] = useState("");
+  const transmissionOptions = [{id:1, name:'Automatic'}, {id:2, name:'Manual'}];
   const [selectedPromoted, setSelectedPromoted] = useState("");
+  const promfinOptions = [{id:1, name:'Yes'}, {id:2, name:'No'}];
   const [selectedFinancing, setSelectedFinancing] = useState("");
+  const conditionOptions = [{id:1, name:'New'}, {id:2, name:'Used'}];
   const [selectedCondition, setSelectedCondition] = useState("");
   const [selectedVersion, setSelectedVersion] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
   const [selectedMileage, setSelectedMileage] = useState("");
+  const [dataReceived, setDataReceived] = useState("");
   const [loading, setLoading] = useState("");
   const [error, setError] = useState("");
 
   const router = useRouter();
+  const { id } = router.query;
 
   const prevSelectedBrandRef = useRef();
   const prevSelectedModelRef = useRef();
   const prevSelectedStateRef = useRef();
   const prevSelectedCityRef = useRef();
+
+  useEffect(() => {
+    if(id){
+      setLoading(true);
+      const fetchData = async () => {
+        try {
+          const response = await fetch(`http://localhost:3001/cars/${id}`);
+          if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+            setDataReceived(data);
+            setSelectedBrand(dataReceived.brand)
+            setSelectedModel(dataReceived.model)
+            setSelectedState(dataReceived.state)
+            setSelectedCity(dataReceived.city)
+            setSelectedTransimission(dataReceived.transmission === 'Automatic' ? transmissionOptions[0] : transmissionOptions[1])
+            setSelectedPromoted(dataReceived.promoted === 'Yes' ? promfinOptions[0] : promfinOptions[1])
+            setSelectedFinancing(dataReceived.financing === 'Yes' ? promfinOptions[0] : promfinOptions[1])
+            setSelectedCondition(dataReceived.condition === 'New' ? conditionOptions[0] : conditionOptions[1])
+            setSelectedVersion(dataReceived.version)
+            setSelectedYear(dataReceived.year)
+            setSelectedPrice(dataReceived.price)
+            setSelectedMileage(dataReceived.mileage)
+            
+            
+          } else {
+            throw new Error('Error, there was a problem while fetching the cars.');
+          }
+        } catch (error) {
+          setError(error.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchData();
+    }
+  }, [router.query]);
 
   useEffect(() => {
 
@@ -144,8 +187,8 @@ export default function NewCar(){
   const handleSubmit = (event) => {
     event.preventDefault();
     
-    let url = 'http://localhost:3001/newCar';
-    let method = 'POST';
+    let url = `http://localhost:3001/updateCar/${id}`;
+    let method = 'PUT';
     let data = formatData();
 
     var requestOptions = {
@@ -179,13 +222,13 @@ export default function NewCar(){
       <Navbar></Navbar>
       <div className="flex flex-1 flex-col px-6 py-12 lg:px-8">
         <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Create a new Car
+            Modify Car
         </h2>
         <h3 className="text-sm leading-9 tracking-tight text-gray-900">
             All fields with an * are Required
         </h3>
         <div className="grid gap-4 grid-cols-3 mt-10 space-y-6 px-6 shadow-md rounded-lg pb-5">
-          <div className='mt-6'>
+           <div className='mt-6'>
               <Dropdown label='Brand' selectedOption={selectedBrand} setSelectedOption={setSelectedBrand} allOptions={brands}/>
           </div>
           <div>
@@ -194,42 +237,42 @@ export default function NewCar(){
           <div>
               <label className="block text-sm font-medium leading-6 text-gray-900">Version</label>
               <div className="mt-2">
-              <input name="version" required className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+              <input name="version" required value={selectedVersion} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                   onChange={handleChange}/>
               </div>
           </div>
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Year</label>
             <div className="mt-2">
-              <input name="year" required className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+              <input name="year" required value={selectedYear} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                 onChange={handleChange} />
             </div>
           </div>
           <div>
-            <Dropdown label='Transmission' selectedOption={selectedTransimission} setSelectedOption={setSelectedTransimission} allOptions={[{id:1, name:'Automatic'}, {id:2, name:'Manual'}]}/>
+            <Dropdown label='Transmission' selectedOption={selectedTransimission} setSelectedOption={setSelectedTransimission} allOptions={transmissionOptions}/>
           </div>
           <div>
-            <Dropdown label='Condition' selectedOption={selectedCondition} setSelectedOption={setSelectedCondition} allOptions={[{id:1, name:'New'}, {id:2, name:'Used'}]}/>
+            <Dropdown label='Condition' selectedOption={selectedCondition} setSelectedOption={setSelectedCondition} allOptions={conditionOptions}/>
           </div>
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Price</label>
             <div className="mt-2">
-              <input name="price" required className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+              <input name="price" required value={selectedPrice} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                 onChange={handleChange}/>
             </div>
           </div>
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Mileage</label>
             <div className="mt-2">
-              <input name="mileage" required className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+              <input name="mileage" required value={selectedMileage} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                 onChange={handleChange}/>
             </div>
           </div>
           <div>
-            <Dropdown label='Promoted' selectedOption={selectedPromoted} setSelectedOption={setSelectedPromoted} allOptions={[{id:1, name:'Yes'}, {id:2, name:'No'}]}/>
+            <Dropdown label='Promoted' selectedOption={selectedPromoted} setSelectedOption={setSelectedPromoted} allOptions={promfinOptions}/>
           </div>
           <div>
-            <Dropdown label='Financing' selectedOption={selectedFinancing} setSelectedOption={setSelectedFinancing} allOptions={[{id:1, name:'Yes'}, {id:2, name:'No'}]}/>
+            <Dropdown label='Financing' selectedOption={selectedFinancing} setSelectedOption={setSelectedFinancing} allOptions={promfinOptions}/>
           </div>
           <div>
               <Dropdown label='State' selectedOption={selectedState} setSelectedOption={setSelectedState} allOptions={states}/>

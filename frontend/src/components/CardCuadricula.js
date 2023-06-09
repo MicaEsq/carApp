@@ -3,10 +3,11 @@ import Link from 'next/link';
 import Badge from 'i/components/Badge';
 import Carousel from 'i/components/Carousel';
 import { modifyFavorites } from 'i/reusableFunctions/modifyFavorites';
+import { useRouter } from 'next/router';
 
 function CardCuadricula({product}) {
   const [favorites, setFavorites] = useState([]);
-
+  const router = useRouter();
   useEffect(() => {
     let keys = Object.keys(sessionStorage);
     
@@ -18,7 +19,7 @@ function CardCuadricula({product}) {
   }, [])
 
   return (
-    <div key={product.id} className="my-2 mb-3 bg-[#ffffff] rounded-lg shadow-md">
+    <div key={product.id} className="my-2 mb-3 bg-[#ffffff] rounded-lg shadow-md cursor-pointer" onClick={() => router.push(`/carView/${product.id}`)}>
       <div className="group relative m-2">
         <div className="w-full relative">
           <button className="rounded-full bg-white absolute z-10 top-2 right-2 p-1.5" onClick={() => setFavorites(modifyFavorites(product, favorites))}>

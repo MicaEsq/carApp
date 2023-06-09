@@ -12,7 +12,7 @@ export default function Dropdown({label, selectedOption, setSelectedOption, allO
     <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">{label}</Listbox.Label>
     <div className="relative mt-2">
         <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left border border-gray-300 sm:text-sm">
-            {selectedOption.length !== 0 ? 
+            {selectedOption ? 
               selectedOption.name
              : 
               <span className="text-gray-400">Select an option</span>}

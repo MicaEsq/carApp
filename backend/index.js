@@ -39,6 +39,8 @@ app.get('/cars', db.getCars)
 app.post('/newCar', db.createCar)
 app.post('/filters', db.getFilters)
 app.get('/cars/:id', db.getCarById)
+app.put('/cars/:id', db.updateCar)
+app.delete('/cars/:id', db.deleteCar)
 //app.get('/brands', db.getBrands)
 
 app.listen(port, () => {

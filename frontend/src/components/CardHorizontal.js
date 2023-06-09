@@ -19,7 +19,7 @@ export default function CardHorizontal({product}) {
   }, [])
 
   return (
-    <div key={product.id} className="grid grid-cols-3 my-4">
+    <div key={product.id} className="grid grid-cols-3 my-4 cursor-pointer" onClick={() => router.push(`/carView/${product.id}`)}>
         <div className="col-span-1 relative overflow-hidden">
           <button className="rounded-full bg-white absolute z-10 top-2 right-2 p-1.5 cursor-pointer" onClick={() => setFavorites(modifyFavorites(product.id, favorites))}>
             {favorites.find(element => element.id === product.id.toString()) !== undefined ? 

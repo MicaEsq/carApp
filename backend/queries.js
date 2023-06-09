@@ -199,13 +199,29 @@ const getCars = (request, response) => {
 const getCarById = (request, response) => {
     const id = parseInt(request.params.id)
 
-    connectionPool.query(`SELECT c.id, ci.name AS city_name, s.name AS state_name, c.year, b.name AS brand_name, m.name AS model_name, c.version, c.transmission, c.condition, c.price, c.mileage, c.image, c.promoted, c.financing
-        FROM cars c
-        LEFT JOIN cities ci ON c.city_id = ci.id
-        LEFT JOIN states s ON c.state_id = s.id
-        LEFT JOIN brands b ON c.brand_id = b.id
-        LEFT JOIN models m ON c.model_id = m.id
-        WHERE c.id = $1;`, [id], (error, results) => {
+    connectionPool.query(`SELECT 
+            c.id,
+            json_build_object('id', ci.id, 'name', ci.name) AS city,
+            json_build_object('id', s.id, 'name', s.name) AS state,
+            c.year,
+            json_build_object('id', b.id, 'name', b.name) AS brand,
+            json_build_object('id', m.id, 'name', m.name) AS model,
+            c.version,
+            c.transmission,
+            c.condition,
+            c.price,
+            c.mileage,
+            c.image,
+            c.promoted,
+            c.financing
+        FROM
+            cars c
+            LEFT JOIN cities ci ON c.city_id = ci.id
+            LEFT JOIN states s ON c.state_id = s.id
+            LEFT JOIN brands b ON c.brand_id = b.id
+            LEFT JOIN models m ON c.model_id = m.id
+        WHERE
+            c.id = $1;`, [id], (error, results) => {
     
         if (error) {
             response.status(404).send({message: `There is no car with id: ${id}`})
@@ -240,7 +256,7 @@ const updateCar = (request, response) => {
     const id = parseInt(request.params.id)
     const { name, email } = request.body
   
-    connectionPool.query('UPDATE users SET name = $1, email = $2 WHERE id = $3', [name, email, id], (error, results) => {
+    connectionPool.query('UPDATE cars SET name = $1, email = $2 WHERE id = $3', [name, email, id], (error, results) => {
         if (error) {
             response.status(400).send({message:`User could not be modified`})
         }
@@ -254,12 +270,12 @@ const updateCar = (request, response) => {
 const deleteCar = (request, response) => {
     const id = parseInt(request.params.id)
   
-    connectionPool.query('DELETE FROM users WHERE id = $1', [id], (error, results) => {
+    connectionPool.query('DELETE FROM cars WHERE id = $1', [id], (error, results) => {
       if (error) {
-        response.status(400).send({message:`User could not be deleted`})
+        response.status(400).send({message:`Car with id: ${id} could not be deleted`})
       }
       else{
-        response.status(200).send({message:`User deleted with ID: ${id}`})
+        response.status(200).send({message:`The car with id: ${id} was successfully deleted`})
       }
       
     })
@@ -360,5 +376,7 @@ module.exports = {
     getCars,
     getFilters,
     getCarById,
-    createCar
+    createCar,
+    updateCar,
+    deleteCar
 } 
