@@ -1,21 +1,48 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 
-export default function Dropdown({label, selectedOption, setSelectedOption, allOptions}) {
-  
+export default function Dropdown({label, selectedOption, allData, setSelectedOption, allOptions, updateFilter}) {
+  const [selectedOptionAux, setSelectedOptionAux] = useState(selectedOption);
+
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
 
+  useEffect(() => {
+
+    let dataux= allData;
+
+    if(label === 'Financing' || label === 'Promoted'){
+        if(selectedOptionAux.name === 'Yes'){
+            dataux[label.toLowerCase()] = true;
+        }
+        else{
+            dataux[label.toLowerCase()] = false;
+        }
+        setSelectedOption(dataux);
+    }
+    else if(label === 'Transmission' || label === 'Condition'){
+        dataux[label.toLowerCase()] = selectedOptionAux.name;
+        setSelectedOption(dataux);
+    }
+    else{
+        dataux[label.toLowerCase()] = selectedOptionAux;
+        updateFilter(selectedOptionAux);
+        setSelectedOption(dataux);
+    }
+
+  }, [selectedOptionAux])
+    
+
   return (
-    <Listbox value={selectedOption} onChange={setSelectedOption}>
+    <Listbox value={selectedOptionAux} onChange={setSelectedOptionAux}>
     <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">{label}</Listbox.Label>
     <div className="relative mt-2">
         <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left border border-gray-300 sm:text-sm">
-            {selectedOption ? 
-              selectedOption.name
+            {selectedOptionAux === null || selectedOptionAux === undefined ? 
+                <span className="text-gray-400">Select an option</span>
              : 
-              <span className="text-gray-400">Select an option</span>}
+             selectedOptionAux.name}
             <span className="absolute inset-y-0 right-1 flex items-center pr-2">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />

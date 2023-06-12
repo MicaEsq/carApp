@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 function CardCuadricula({product}) {
   const [favorites, setFavorites] = useState([]);
   const router = useRouter();
+  
   useEffect(() => {
     let keys = Object.keys(sessionStorage);
     

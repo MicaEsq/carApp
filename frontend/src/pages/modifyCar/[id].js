@@ -24,10 +24,12 @@ export default function ModifyCar(){
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
   const [selectedMileage, setSelectedMileage] = useState("");
-  const [dataReceived, setDataReceived] = useState("");
+  const [dataReceived, setDataReceived] = useState([]);
+  const [dataToUse, setDataToUse] = useState("");
   const [loading, setLoading] = useState("");
   const [error, setError] = useState("");
-
+  
+  let count = 1; 
   const router = useRouter();
   const { id } = router.query;
 
@@ -35,31 +37,39 @@ export default function ModifyCar(){
   const prevSelectedModelRef = useRef();
   const prevSelectedStateRef = useRef();
   const prevSelectedCityRef = useRef();
+  const isFirstLoadRef = useRef(true);
 
   useEffect(() => {
-    if(id){
+    if(id && count === 1){
+      count=2;
       setLoading(true);
       const fetchData = async () => {
         try {
           const response = await fetch(`http://localhost:3001/cars/${id}`);
           if (response.ok) {
             const data = await response.json();
-            console.log(data);
+
             setDataReceived(data);
-            setSelectedBrand(dataReceived.brand)
-            setSelectedModel(dataReceived.model)
-            setSelectedState(dataReceived.state)
-            setSelectedCity(dataReceived.city)
-            setSelectedTransimission(dataReceived.transmission === 'Automatic' ? transmissionOptions[0] : transmissionOptions[1])
-            setSelectedPromoted(dataReceived.promoted === 'Yes' ? promfinOptions[0] : promfinOptions[1])
-            setSelectedFinancing(dataReceived.financing === 'Yes' ? promfinOptions[0] : promfinOptions[1])
-            setSelectedCondition(dataReceived.condition === 'New' ? conditionOptions[0] : conditionOptions[1])
-            setSelectedVersion(dataReceived.version)
-            setSelectedYear(dataReceived.year)
-            setSelectedPrice(dataReceived.price)
-            setSelectedMileage(dataReceived.mileage)
-            
-            
+            setDataToUse(JSON.parse(JSON.stringify(data)));
+            setSelectedTransimission(data.transmission === 'Automatic' ? transmissionOptions[0] : transmissionOptions[1])
+            setSelectedPromoted(data.promoted === 'Yes' ? promfinOptions[0] : promfinOptions[1])
+            setSelectedFinancing(data.financing === 'Yes' ? promfinOptions[0] : promfinOptions[1])
+            setSelectedCondition(data.condition === 'New' ? conditionOptions[0] : conditionOptions[1])
+            setSelectedVersion(data.version)
+            setSelectedYear(data.year)
+            setSelectedPrice(data.price)
+            setSelectedMileage(data.mileage)
+
+            prevSelectedBrandRef.current = data.brand;
+            prevSelectedModelRef.current = data.model;
+            prevSelectedStateRef.current = data.city;
+            prevSelectedCityRef.current = data.state;
+
+            await getFilters('brands', '');
+            await getFilters('models', '');
+            await getFilters('states', '');
+            await getFilters('cities', '');
+
           } else {
             throw new Error('Error, there was a problem while fetching the cars.');
           }
@@ -67,127 +77,119 @@ export default function ModifyCar(){
           setError(error.message);
         } finally {
           setLoading(false);
+          isFirstLoadRef.current = false;
         }
       };
 
       fetchData();
+
     }
-  }, [router.query]);
+  }, [id]);
 
   useEffect(() => {
-
-      getFilters('brands', '');
-      prevSelectedBrandRef.current = selectedBrand;
-      getFilters('models', '');
-      prevSelectedModelRef.current = selectedModel;
-      getFilters('states', '');
-      prevSelectedStateRef.current = selectedState;
-      getFilters('cities', '');
-      prevSelectedCityRef.current = selectedCity;
-
-  }, [])
-
-  useEffect(() => {
-      if(prevSelectedBrandRef.current !== selectedBrand){
-          getFilters('models', selectedBrand.id);
-          prevSelectedBrandRef.current = selectedBrand;
+    if(!isFirstLoadRef.current){
+      
+      if(prevSelectedBrandRef.current !== selectedBrand && selectedBrand.id){
+        getFilters('models', selectedBrand.id);
+        prevSelectedBrandRef.current = selectedBrand;
       }
-      else if(prevSelectedStateRef.current !== selectedState){
-          getFilters('cities', selectedState.id);
-          prevSelectedStateRef.current = selectedState;
-      }        
-      else if(prevSelectedModelRef.current !== selectedModel){
-          getFilters('brands', selectedModel.name);
-          prevSelectedModelRef.current = selectedModel;
+      else if(prevSelectedModelRef.current !== selectedModel && selectedModel.name){
+        getFilters('brands', selectedModel.name);
+        prevSelectedModelRef.current = selectedModel;
       }
-      else if(prevSelectedCityRef.current !== selectedCity){
+      else if(prevSelectedStateRef.current !== selectedState && selectedState.id){
+        getFilters('cities', selectedState.id);
+        prevSelectedStateRef.current = selectedState;
+      }   
+      else if(prevSelectedCityRef.current !== selectedCity && selectedCity.id){
         getFilters('states', selectedCity.id);
         prevSelectedCityRef.current = selectedCity;
-      } 
-  }, [selectedBrand, selectedState, selectedModel, selectedCity])
+      }
+    }
+  }, [selectedBrand, selectedModel, selectedState, selectedCity])
 
 
-  function getFilters(extension, primary){
-      let url = 'http://localhost:3001/filters';
-      let method = 'POST';
-      let data = {primaryFilter: primary, type: extension };
-      var requestOptions = {};
+  async function getFilters(extension, primary){
+      try{
+          let url = 'http://localhost:3001/filters';
+          let method = 'POST';
+          let data = {primaryFilter: primary, type: extension };
+          var requestOptions = {};
 
-      requestOptions = {
-          method: method,
-          headers: { 'Content-Type': 'application/json'},
-          body: JSON.stringify(data)
-      };
-      
-      fetch(url, requestOptions)
-      .then(response => {
+          requestOptions = {
+              method: method,
+              headers: { 'Content-Type': 'application/json'},
+              body: JSON.stringify(data)
+          };
+          
+          const response = await fetch(url, requestOptions);
+          
           if (response.ok){
-              return Promise.all([response.ok, response.json()]);
+            const responseData = await response.json();
+
+            if (extension === 'brands') {
+              setBrands(responseData);
+            } else if (extension === 'models') {
+              setModels(responseData);
+            } else if (extension === 'states') {
+              setStates(responseData);
+            } else if (extension === 'cities') {
+              setCities(responseData);
+            }
+
+          } else {
+            throw new Error('Error, there was a problem while fetching the filters.');
           }
-          else{
-              return response.text().then(text => {throw new Error(text)});
-          }
-      })
-      .then(([responseOk, response]) => {
-        if(extension === 'brands'){
-          setBrands(response)
+        } catch (error) {
+          throw new Error(error.message);
         }
-        else if(extension === 'models'){
-          setModels(response)
-        }
-        else if(extension === 'states'){
-          setStates(response)
-        }
-        else if(extension === 'cities'){
-          setCities(response)
-        }
-        else{}
-
-        setError('');
-      })
-      .catch((error) => {
-          setError(error.message);
-      });
-  }
-  
-
-  function formatData(){ //enhance this
-
-    let result = {brand_id: selectedBrand !== "" ? selectedBrand.id : null, model_id: selectedModel !== "" ? selectedModel.id : null,
-     state_id: selectedState !== "" ? selectedState.id : null
-     , city_id: selectedCity !== "" ? selectedCity.id : null,
-      year: selectedYear !== "" ? selectedBrand.id : null,
-       version: selectedVersion !== "" ? selectedBrand.id : null,
-        transmission: selectedTransimission !== "" ? selectedTransimission.name : null,
-         condition: selectedCondition !== "" ? selectedCondition.name : null,
-          price: selectedPrice !== "" ? selectedPrice : null,
-           mileage: selectedMileage !== "" ? selectedMileage : null,
-            promoted: selectedPromoted !== "" ? selectedPromoted.name : null,
-             financing: selectedFinancing !== "" ? selectedFinancing.name : null};
-    return result;
   }
     
   const handleChange=(event)=>{
     if(event.target.name === 'year'){
-      setSelectedYear(event.target.value);
+      dataToUse.year = event.target.value;
     }
     else if(event.target.name === 'version'){
-      setSelectedVersion(event.target.value);
+      dataToUse.version = event.target.value;
     }
     else if(event.target.name === 'price'){
-      setSelectedPrice(event.target.value);
+      dataToUse.price = event.target.value;
     }
     else if(event.target.name === 'mileage'){
-      setSelectedMileage(event.target.value);
+      dataToUse.mileage = event.target.value;
     }
     else{}
   }
-  
 
+  function formatData(){
+    let data = {};
+
+    for(let newData in dataToUse){ 
+      if(typeof(dataToUse[newData])==='object' && newData !== 'image'){
+          if(dataToUse[newData].id !== dataReceived[newData].id){
+            let name = newData + '_id';
+            data[name]=dataToUse[newData].id;
+          }
+      }
+      else if(typeof(dataToUse[newData])==='string'){
+          if(dataToUse[newData].localeCompare(dataReceived[newData])!==0){
+              data[newData]=dataToUse[newData];
+          }
+      }
+      else{ 
+          if(dataToUse[newData] !== dataReceived[newData]){
+              data[newData]=dataToUse[newData];
+          }
+      }
+    }
+        
+    return data;
+  }
+  
   const handleSubmit = (event) => {
     event.preventDefault();
-    
-    let url = `http://localhost:3001/updateCar/${id}`;
+
+    let url = `http://localhost:3001/cars/${id}`;
     let method = 'PUT';
     let data = formatData();
 
@@ -196,7 +198,7 @@ export default function ModifyCar(){
       headers: { 'Content-Type': 'application/json'},
       body: JSON.stringify(data)
     };
-    
+     
     fetch(url, requestOptions)
     .then(response => {
         if (response.ok){
@@ -207,12 +209,12 @@ export default function ModifyCar(){
         }
     })
     .then(([responseOk, body]) => {
-        router.push(`/carView/${body.id}`);
+        router.push(`/carView/${id}`);
         setError('');
     })
     .catch((error) => {
         setError(error.message);
-    });
+    }); 
   };
 
   
@@ -227,58 +229,58 @@ export default function ModifyCar(){
         <h3 className="text-sm leading-9 tracking-tight text-gray-900">
             All fields with an * are Required
         </h3>
-        <div className="grid gap-4 grid-cols-3 mt-10 space-y-6 px-6 shadow-md rounded-lg pb-5">
+        {dataToUse !== "" && <div className="grid gap-4 grid-cols-3 mt-10 space-y-6 px-6 shadow-md rounded-lg pb-5">
            <div className='mt-6'>
-              <Dropdown label='Brand' selectedOption={selectedBrand} setSelectedOption={setSelectedBrand} allOptions={brands}/>
+              <Dropdown label='Brand' selectedOption={dataToUse.brand} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={brands} updateFilter={setSelectedBrand}/>
           </div>
           <div>
-              <Dropdown label='Model' selectedOption={selectedModel} setSelectedOption={setSelectedModel} allOptions={models}/>
+              <Dropdown label='Model' selectedOption={dataToUse.model} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={models} updateFilter={setSelectedModel}/>
           </div>
           <div>
               <label className="block text-sm font-medium leading-6 text-gray-900">Version</label>
               <div className="mt-2">
-              <input name="version" required value={selectedVersion} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+              <input name="version" required value={dataToUse.version} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                   onChange={handleChange}/>
               </div>
           </div>
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Year</label>
             <div className="mt-2">
-              <input name="year" required value={selectedYear} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+              <input name="year" required value={dataToUse.year} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                 onChange={handleChange} />
             </div>
           </div>
           <div>
-            <Dropdown label='Transmission' selectedOption={selectedTransimission} setSelectedOption={setSelectedTransimission} allOptions={transmissionOptions}/>
+            <Dropdown label='Transmission' selectedOption={dataToUse.transmission === 'Automatic' ? transmissionOptions[0] : transmissionOptions[1]} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={transmissionOptions} updateFilter={''}/>
           </div>
           <div>
-            <Dropdown label='Condition' selectedOption={selectedCondition} setSelectedOption={setSelectedCondition} allOptions={conditionOptions}/>
+            <Dropdown label='Condition' selectedOption={dataToUse.condition === 'New' ? conditionOptions[0] : conditionOptions[1]} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={conditionOptions} updateFilter={''}/>
           </div>
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Price</label>
             <div className="mt-2">
-              <input name="price" required value={selectedPrice} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+              <input name="price" required value={dataToUse.price} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                 onChange={handleChange}/>
             </div>
           </div>
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Mileage</label>
             <div className="mt-2">
-              <input name="mileage" required value={selectedMileage} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+              <input name="mileage" required value={dataToUse.mileage} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                 onChange={handleChange}/>
             </div>
           </div>
           <div>
-            <Dropdown label='Promoted' selectedOption={selectedPromoted} setSelectedOption={setSelectedPromoted} allOptions={promfinOptions}/>
+            <Dropdown label='Promoted' selectedOption={dataToUse.promoted === true ? promfinOptions[0] : promfinOptions[1]} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={promfinOptions} updateFilter={''}/>
           </div>
           <div>
-            <Dropdown label='Financing' selectedOption={selectedFinancing} setSelectedOption={setSelectedFinancing} allOptions={promfinOptions}/>
+            <Dropdown label='Financing' selectedOption={dataToUse.financing === true ? promfinOptions[0] : promfinOptions[1]} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={promfinOptions} updateFilter={''}/>
           </div>
           <div>
-              <Dropdown label='State' selectedOption={selectedState} setSelectedOption={setSelectedState} allOptions={states}/>
+              <Dropdown label='State' selectedOption={dataToUse.state} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={states} updateFilter={setSelectedState}/>
           </div>
           <div>
-              <Dropdown label='City' selectedOption={selectedCity} setSelectedOption={setSelectedCity} allOptions={cities}/>
+              <Dropdown label='City' selectedOption={dataToUse.city} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={cities} updateFilter={setSelectedCity}/>
           </div>
           {/* <div>
             <div className="flex items-center justify-between">
@@ -314,7 +316,7 @@ export default function ModifyCar(){
             </button>
           </div>
       
-        </div>
+        </div>}
       </div>
   </>
   );

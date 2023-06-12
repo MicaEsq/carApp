@@ -254,14 +254,26 @@ const createCar = (request, response) => {
 
 const updateCar = (request, response) => {
     const id = parseInt(request.params.id)
-    const { name, email } = request.body
-  
-    connectionPool.query('UPDATE cars SET name = $1, email = $2 WHERE id = $3', [name, email, id], (error, results) => {
+    const updatedData = request.body
+
+    let query = 'UPDATE cars SET';
+    const updateParams = [];
+    console.log(query)
+    Object.keys(updatedData).forEach((attribute, index) => {
+        query += ` ${attribute} = $${index + 1},`;
+        updateParams.push(updatedData[attribute]);
+    });
+    console.log(query)
+    query = query.slice(0, -1); //remove las added comma
+    query += ' WHERE id = $' + (updateParams.length + 1) +';';
+    updateParams.push(id);
+    console.log(query, updateParams);
+    connectionPool.query(query, updateParams, (error, results) => {
         if (error) {
-            response.status(400).send({message:`User could not be modified`})
+            response.status(400).send({message:`Car with id: ${id} could not be modified ${error}`})
         }
         else{
-            response.status(200).send({message:`User modified with ID: ${id}`})
+            response.status(200).send({message:`Car with id: ${id} was successfully be modified`})
         }
       }
     )
