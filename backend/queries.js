@@ -258,16 +258,15 @@ const updateCar = (request, response) => {
 
     let query = 'UPDATE cars SET';
     const updateParams = [];
-    console.log(query)
     Object.keys(updatedData).forEach((attribute, index) => {
         query += ` ${attribute} = $${index + 1},`;
         updateParams.push(updatedData[attribute]);
     });
-    console.log(query)
+
     query = query.slice(0, -1); //remove las added comma
     query += ' WHERE id = $' + (updateParams.length + 1) +';';
     updateParams.push(id);
-    console.log(query, updateParams);
+    
     connectionPool.query(query, updateParams, (error, results) => {
         if (error) {
             response.status(400).send({message:`Car with id: ${id} could not be modified ${error}`})

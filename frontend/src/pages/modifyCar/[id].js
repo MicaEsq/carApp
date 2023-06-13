@@ -13,13 +13,9 @@ export default function ModifyCar(){
   const [selectedState, setSelectedState] = useState("");
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState("");
-  const [selectedTransimission, setSelectedTransimission] = useState("");
   const transmissionOptions = [{id:1, name:'Automatic'}, {id:2, name:'Manual'}];
-  const [selectedPromoted, setSelectedPromoted] = useState("");
   const promfinOptions = [{id:1, name:'Yes'}, {id:2, name:'No'}];
-  const [selectedFinancing, setSelectedFinancing] = useState("");
   const conditionOptions = [{id:1, name:'New'}, {id:2, name:'Used'}];
-  const [selectedCondition, setSelectedCondition] = useState("");
   const [selectedVersion, setSelectedVersion] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
@@ -150,24 +146,24 @@ export default function ModifyCar(){
             data[name]=dataToUse[newData].id;
           }
       }
-      else if(typeof(dataToUse[newData])==='string'){
+      else if(newData ==='year' || newData ==='version' || newData ==='price' || newData ==='mileage'){
           if(newData === 'year'){
-            if(selectedYear.localeCompare(dataReceived[newData])!==0){
+            if(selectedYear.localeCompare(dataReceived[newData].toString())){
               data[newData]=selectedYear;
             }
           }
           else if(newData === 'version'){
-            if(selectedVersion.localeCompare(dataReceived[newData])!==0){
+            if(selectedVersion.localeCompare(dataReceived[newData].toString())){
               data[newData]=selectedVersion;
             }
           }
           else if(newData === 'price'){
-            if(selectedPrice.localeCompare(dataReceived[newData])!==0){
+            if(selectedPrice.localeCompare(dataReceived[newData].toString())){
               data[newData]=selectedPrice;
             }
           }
           else if(newData === 'mileage'){
-            if(selectedMileage.localeCompare(dataReceived[newData])!==0){
+            if(selectedMileage===dataReceived[newData].toString()){
               data[newData]=selectedMileage;
             }
           }
@@ -178,11 +174,11 @@ export default function ModifyCar(){
           }
       }
     }
-        
+
     return data;
   }
   
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     let url = `http://localhost:3001/cars/${id}`;
@@ -196,7 +192,7 @@ export default function ModifyCar(){
     };
 
     try {
-      const response = fetch(url, requestOptions);
+      const response = await fetch(url, requestOptions);
       if (response.ok) {
         router.push(`/carView/${id}`);
         setError('');
