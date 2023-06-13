@@ -28,7 +28,7 @@ export default function ModifyCar(){
   const [dataToUse, setDataToUse] = useState("");
   const [loading, setLoading] = useState("");
   const [error, setError] = useState("");
-  
+
   let count = 1; 
   const router = useRouter();
   const { id } = router.query;
@@ -40,7 +40,7 @@ export default function ModifyCar(){
   const isFirstLoadRef = useRef(true);
 
   useEffect(() => {
-    if(id && count === 1){
+    if(id && count===1){
       count=2;
       setLoading(true);
       const fetchData = async () => {
@@ -51,10 +51,6 @@ export default function ModifyCar(){
 
             setDataReceived(data);
             setDataToUse(JSON.parse(JSON.stringify(data)));
-            setSelectedTransimission(data.transmission === 'Automatic' ? transmissionOptions[0] : transmissionOptions[1])
-            setSelectedPromoted(data.promoted === 'Yes' ? promfinOptions[0] : promfinOptions[1])
-            setSelectedFinancing(data.financing === 'Yes' ? promfinOptions[0] : promfinOptions[1])
-            setSelectedCondition(data.condition === 'New' ? conditionOptions[0] : conditionOptions[1])
             setSelectedVersion(data.version)
             setSelectedYear(data.year)
             setSelectedPrice(data.price)
@@ -62,8 +58,8 @@ export default function ModifyCar(){
 
             prevSelectedBrandRef.current = data.brand;
             prevSelectedModelRef.current = data.model;
-            prevSelectedStateRef.current = data.city;
-            prevSelectedCityRef.current = data.state;
+            prevSelectedStateRef.current = data.state;
+            prevSelectedCityRef.current = data.city;
 
             await getFilters('brands', '');
             await getFilters('models', '');
@@ -88,20 +84,19 @@ export default function ModifyCar(){
 
   useEffect(() => {
     if(!isFirstLoadRef.current){
-      
-      if(prevSelectedBrandRef.current !== selectedBrand && selectedBrand.id){
+      if(prevSelectedBrandRef.current.id !== selectedBrand.id){
         getFilters('models', selectedBrand.id);
         prevSelectedBrandRef.current = selectedBrand;
       }
-      else if(prevSelectedModelRef.current !== selectedModel && selectedModel.name){
+      else if(prevSelectedModelRef.current.id !== selectedModel.id){
         getFilters('brands', selectedModel.name);
         prevSelectedModelRef.current = selectedModel;
       }
-      else if(prevSelectedStateRef.current !== selectedState && selectedState.id){
+      else if(prevSelectedStateRef.current.id !== selectedState.id){
         getFilters('cities', selectedState.id);
         prevSelectedStateRef.current = selectedState;
       }   
-      else if(prevSelectedCityRef.current !== selectedCity && selectedCity.id){
+      else if(prevSelectedCityRef.current.id !== selectedCity.id){
         getFilters('states', selectedCity.id);
         prevSelectedCityRef.current = selectedCity;
       }
@@ -144,22 +139,6 @@ export default function ModifyCar(){
           throw new Error(error.message);
         }
   }
-    
-  const handleChange=(event)=>{
-    if(event.target.name === 'year'){
-      dataToUse.year = event.target.value;
-    }
-    else if(event.target.name === 'version'){
-      dataToUse.version = event.target.value;
-    }
-    else if(event.target.name === 'price'){
-      dataToUse.price = event.target.value;
-    }
-    else if(event.target.name === 'mileage'){
-      dataToUse.mileage = event.target.value;
-    }
-    else{}
-  }
 
   function formatData(){
     let data = {};
@@ -172,8 +151,25 @@ export default function ModifyCar(){
           }
       }
       else if(typeof(dataToUse[newData])==='string'){
-          if(dataToUse[newData].localeCompare(dataReceived[newData])!==0){
-              data[newData]=dataToUse[newData];
+          if(newData === 'year'){
+            if(selectedYear.localeCompare(dataReceived[newData])!==0){
+              data[newData]=selectedYear;
+            }
+          }
+          else if(newData === 'version'){
+            if(selectedVersion.localeCompare(dataReceived[newData])!==0){
+              data[newData]=selectedVersion;
+            }
+          }
+          else if(newData === 'price'){
+            if(selectedPrice.localeCompare(dataReceived[newData])!==0){
+              data[newData]=selectedPrice;
+            }
+          }
+          else if(newData === 'mileage'){
+            if(selectedMileage.localeCompare(dataReceived[newData])!==0){
+              data[newData]=selectedMileage;
+            }
           }
       }
       else{ 
@@ -198,23 +194,19 @@ export default function ModifyCar(){
       headers: { 'Content-Type': 'application/json'},
       body: JSON.stringify(data)
     };
-     
-    fetch(url, requestOptions)
-    .then(response => {
-        if (response.ok){
-            return Promise.all([response.ok, response.json()]);
-        }
-        else{
-            return response.text().then(text => {throw new Error(text)});
-        }
-    })
-    .then(([responseOk, body]) => {
+
+    try {
+      const response = fetch(url, requestOptions);
+      if (response.ok) {
         router.push(`/carView/${id}`);
         setError('');
-    })
-    .catch((error) => {
-        setError(error.message);
-    }); 
+      } else {
+        throw new Error('Error, there was a problem while modifying the car.');
+      }
+    } catch (error) {
+      setError(error.message);
+    } 
+
   };
 
   
@@ -239,15 +231,15 @@ export default function ModifyCar(){
           <div>
               <label className="block text-sm font-medium leading-6 text-gray-900">Version</label>
               <div className="mt-2">
-              <input name="version" required value={dataToUse.version} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
-                  onChange={handleChange}/>
+              <input name="version" required value={selectedVersion} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                  onChange={(e)=>setSelectedVersion(e.target.value)}/>
               </div>
           </div>
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Year</label>
             <div className="mt-2">
-              <input name="year" required value={dataToUse.year} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
-                onChange={handleChange} />
+              <input name="year" required value={selectedYear} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                onChange={(e)=>setSelectedYear(e.target.value)} />
             </div>
           </div>
           <div>
@@ -259,15 +251,15 @@ export default function ModifyCar(){
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Price</label>
             <div className="mt-2">
-              <input name="price" required value={dataToUse.price} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
-                onChange={handleChange}/>
+              <input name="price" required value={selectedPrice} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                onChange={(e)=>setSelectedPrice(e.target.value)}/>
             </div>
           </div>
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Mileage</label>
             <div className="mt-2">
-              <input name="mileage" required value={dataToUse.mileage} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
-                onChange={handleChange}/>
+              <input name="mileage" required value={selectedMileage} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                onChange={(e)=>setSelectedMileage(e.target.value)}/>
             </div>
           </div>
           <div>
