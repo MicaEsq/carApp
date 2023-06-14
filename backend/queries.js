@@ -266,7 +266,7 @@ const updateCar = (request, response) => {
     query = query.slice(0, -1); //remove las added comma
     query += ' WHERE id = $' + (updateParams.length + 1) +';';
     updateParams.push(id);
-    
+
     connectionPool.query(query, updateParams, (error, results) => {
         if (error) {
             response.status(400).send({message:`Car with id: ${id} could not be modified ${error}`})
@@ -319,7 +319,8 @@ const getStates = (request, response) => {
 } 
 
 const getFilters = (request, response) => {
-    const { primaryFilter, type } = request.body
+    const { type, primaryFilter } = request.query;
+    
     if(primaryFilter === ''){
         connectionPool.query('SELECT * FROM ' + type + ';', (error, results) => {
             if (error) {

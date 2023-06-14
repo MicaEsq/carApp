@@ -42,57 +42,50 @@ export default function Filters({setFiltersApplied, filtersApplied, setModifiedF
     }
   }, [filtersApplied])
 
-  function getFilters(extension, primary){
-      let url = 'http://localhost:3001/filters';
-      let method = 'POST';
-      let msgError = "Error, filters could not be loaded.";
-      let data = {primaryFilter: primary, type: extension };
-      var requestOptions = {};
+  async function getFilters(extension, primary){
+    try{
+        let url = `http://localhost:3001/filters?type=${extension}&primaryFilter=${primary}`;
+        var requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json'}
+        };
+        
+        const response = await fetch(url, requestOptions);
+        
+        if (response.ok){
+          const responseData = await response.json();
 
-      requestOptions = {
-          method: method,
-          headers: { 'Content-Type': 'application/json'},
-          body: JSON.stringify(data)
-      };
-      
-      fetch(url, requestOptions)
-      .then(response => {
-          if (response.ok){
-              return Promise.all([response.ok, response.json()]);
+          const updatedFilters2 = [...filters2];
+          if(primary === ''){
+            const filterIndex = updatedFilters2.findIndex(filter => filter.type === extension);
+            if (filterIndex !== -1) {
+              updatedFilters2[filterIndex].values = responseData;
+            }
           }
           else{
-              return response.text().then(text => {throw new Error(text)});
+            if(extension === 'brands'){
+              updatedFilters2[0].values = responseData;
+            }
+            else if(extension === 'models'){
+              updatedFilters2[1].values = responseData;
+            }
+            else if(extension === 'states'){
+              updatedFilters2[3].values = responseData;
+            }
+            else if(extension === 'cities'){
+              updatedFilters2[4].values = responseData;
+            }
           }
-      })
-      .then(([responseOk, response]) => {
-        const updatedFilters2 = [...filters2];
-        if(primary === ''){
-          const filterIndex = updatedFilters2.findIndex(filter => filter.type === extension);
-          if (filterIndex !== -1) {
-            updatedFilters2[filterIndex].values = response;
-          }
+
+          setFilters2(updatedFilters2);
+          setError('');
+
+        } else {
+          throw new Error('Error, there was a problem while fetching the filters.');
         }
-        else{
-          if(extension === 'brands'){
-            updatedFilters2[0].values = response;
-          }
-          else if(extension === 'models'){
-            updatedFilters2[1].values = response;
-          }
-          else if(extension === 'states'){
-            updatedFilters2[3].values = response;
-          }
-          else if(extension === 'cities'){
-            updatedFilters2[4].values = response;
-          }
-        }
-        setFilters2(updatedFilters2);
-        
-        setError('');
-      })
-      .catch((error) => {
-          setError(error.message);
-      });
+      } catch (error) {
+        throw new Error(error.message);
+      }
   }
 
   function getButtons(options, getFilters, setFiltersApplied, filtersApplied, setModifiedFilter){

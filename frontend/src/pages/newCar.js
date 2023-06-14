@@ -6,17 +6,17 @@ import Dropdown from 'i/components/Dropdown';
 export default function NewCar(){
 
   const [brands, setBrands] = useState([]);
-  const [selectedBrand, setSelectedBrand] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState(null);
   const [models, setModels] = useState([]);
-  const [selectedModel, setSelectedModel] = useState("");
+  const [selectedModel, setSelectedModel] = useState(null);
   const [states, setStates] = useState([]);
-  const [selectedState, setSelectedState] = useState("");
+  const [selectedState, setSelectedState] = useState(null);
   const [cities, setCities] = useState([]);
-  const [selectedCity, setSelectedCity] = useState("");
-  const [selectedTransimission, setSelectedTransimission] = useState("");
-  const [selectedPromoted, setSelectedPromoted] = useState("");
-  const [selectedFinancing, setSelectedFinancing] = useState("");
-  const [selectedCondition, setSelectedCondition] = useState("");
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [selectedTransimission, setSelectedTransimission] = useState(null);
+  const [selectedPromoted, setSelectedPromoted] = useState(null);
+  const [selectedFinancing, setSelectedFinancing] = useState(null);
+  const [selectedCondition, setSelectedCondition] = useState(null);
   const [selectedVersion, setSelectedVersion] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
@@ -63,50 +63,36 @@ export default function NewCar(){
       } 
   }, [selectedBrand, selectedState, selectedModel, selectedCity])
 
+  async function getFilters(extension, primary){
+    try{
+        let url = `http://localhost:3001/filters?type=${extension}&primaryFilter=${primary}`;
+        var requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json'}
+        };
+        
+        const response = await fetch(url, requestOptions);
+        
+        if (response.ok){
+          const responseData = await response.json();
 
-  function getFilters(extension, primary){
-      let url = 'http://localhost:3001/filters';
-      let method = 'POST';
-      let data = {primaryFilter: primary, type: extension };
-      var requestOptions = {};
-
-      requestOptions = {
-          method: method,
-          headers: { 'Content-Type': 'application/json'},
-          body: JSON.stringify(data)
-      };
-      
-      fetch(url, requestOptions)
-      .then(response => {
-          if (response.ok){
-              return Promise.all([response.ok, response.json()]);
+          if (extension === 'brands') {
+            setBrands(responseData);
+          } else if (extension === 'models') {
+            setModels(responseData);
+          } else if (extension === 'states') {
+            setStates(responseData);
+          } else if (extension === 'cities') {
+            setCities(responseData);
           }
-          else{
-              return response.text().then(text => {throw new Error(text)});
-          }
-      })
-      .then(([responseOk, response]) => {
-        if(extension === 'brands'){
-          setBrands(response)
-        }
-        else if(extension === 'models'){
-          setModels(response)
-        }
-        else if(extension === 'states'){
-          setStates(response)
-        }
-        else if(extension === 'cities'){
-          setCities(response)
-        }
-        else{}
 
-        setError('');
-      })
-      .catch((error) => {
-          setError(error.message);
-      });
+        } else {
+          throw new Error('Error, there was a problem while fetching the filters.');
+        }
+      } catch (error) {
+        throw new Error(error.message);
+      }
   }
-  
 
   function formatData(){ //enhance this
 
@@ -186,10 +172,10 @@ export default function NewCar(){
         </h3>
         <div className="grid gap-4 grid-cols-3 mt-10 space-y-6 px-6 shadow-md rounded-lg pb-5">
           <div className='mt-6'>
-              <Dropdown label='Brand' selectedOption={selectedBrand} setSelectedOption={setSelectedBrand} allOptions={brands}/>
+              <Dropdown label='Brand' selectedOption={selectedBrand} allData={null} setSelectedOption={setSelectedBrand} allOptions={brands} updateFilter={null}/>
           </div>
           <div>
-              <Dropdown label='Model' selectedOption={selectedModel} setSelectedOption={setSelectedModel} allOptions={models}/>
+              <Dropdown label='Model' selectedOption={selectedModel} allData={null} setSelectedOption={setSelectedModel} allOptions={models} updateFilter={null}/>
           </div>
           <div>
               <label className="block text-sm font-medium leading-6 text-gray-900">Version</label>
@@ -206,10 +192,10 @@ export default function NewCar(){
             </div>
           </div>
           <div>
-            <Dropdown label='Transmission' selectedOption={selectedTransimission} setSelectedOption={setSelectedTransimission} allOptions={[{id:1, name:'Automatic'}, {id:2, name:'Manual'}]}/>
+            <Dropdown label='Transmission' selectedOption={selectedTransimission} allData={null} setSelectedOption={setSelectedTransimission} allOptions={[{id:1, name:'Automatic'}, {id:2, name:'Manual'}]} updateFilter={null}/>
           </div>
           <div>
-            <Dropdown label='Condition' selectedOption={selectedCondition} setSelectedOption={setSelectedCondition} allOptions={[{id:1, name:'New'}, {id:2, name:'Used'}]}/>
+            <Dropdown label='Condition' selectedOption={selectedCondition} allData={null} setSelectedOption={setSelectedCondition} allOptions={[{id:1, name:'New'}, {id:2, name:'Used'}]} updateFilter={null}/>
           </div>
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Price</label>
@@ -226,16 +212,16 @@ export default function NewCar(){
             </div>
           </div>
           <div>
-            <Dropdown label='Promoted' selectedOption={selectedPromoted} setSelectedOption={setSelectedPromoted} allOptions={[{id:1, name:'Yes'}, {id:2, name:'No'}]}/>
+            <Dropdown label='Promoted' selectedOption={selectedPromoted} allData={null} setSelectedOption={setSelectedPromoted} allOptions={[{id:1, name:'Yes'}, {id:2, name:'No'}]} updateFilter={null}/>
           </div>
           <div>
-            <Dropdown label='Financing' selectedOption={selectedFinancing} setSelectedOption={setSelectedFinancing} allOptions={[{id:1, name:'Yes'}, {id:2, name:'No'}]}/>
+            <Dropdown label='Financing' selectedOption={selectedFinancing} allData={null} setSelectedOption={setSelectedFinancing} allOptions={[{id:1, name:'Yes'}, {id:2, name:'No'}]} updateFilter={null}/>
           </div>
           <div>
-              <Dropdown label='State' selectedOption={selectedState} setSelectedOption={setSelectedState} allOptions={states}/>
+              <Dropdown label='State' selectedOption={selectedState} allData={null} setSelectedOption={setSelectedState} allOptions={states} updateFilter={null}/>
           </div>
           <div>
-              <Dropdown label='City' selectedOption={selectedCity} setSelectedOption={setSelectedCity} allOptions={cities}/>
+              <Dropdown label='City' selectedOption={selectedCity} allData={null} setSelectedOption={setSelectedCity} allOptions={cities} updateFilter={null}/>
           </div>
           {/* <div>
             <div className="flex items-center justify-between">

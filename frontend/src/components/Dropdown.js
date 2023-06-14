@@ -11,24 +11,28 @@ export default function Dropdown({label, selectedOption, allData, setSelectedOpt
   useEffect(() => {
 
     let dataux= allData;
-
-    if(label === 'Financing' || label === 'Promoted'){
-        if(selectedOptionAux.name === 'Yes'){
-            dataux[label.toLowerCase()] = true;
+    if(allData !== null && updateFilter !== null){
+        if(label === 'Financing' || label === 'Promoted'){
+            if(selectedOptionAux.name === 'Yes'){
+                dataux[label.toLowerCase()] = true;
+            }
+            else{
+                dataux[label.toLowerCase()] = false;
+            }
+            setSelectedOption(dataux);
+        }
+        else if(label === 'Transmission' || label === 'Condition'){
+            dataux[label.toLowerCase()] = selectedOptionAux.name;
+            setSelectedOption(dataux);
         }
         else{
-            dataux[label.toLowerCase()] = false;
+            dataux[label.toLowerCase()] = selectedOptionAux;
+            updateFilter(selectedOptionAux);
+            setSelectedOption(dataux);
         }
-        setSelectedOption(dataux);
-    }
-    else if(label === 'Transmission' || label === 'Condition'){
-        dataux[label.toLowerCase()] = selectedOptionAux.name;
-        setSelectedOption(dataux);
     }
     else{
-        dataux[label.toLowerCase()] = selectedOptionAux;
-        updateFilter(selectedOptionAux);
-        setSelectedOption(dataux);
+        setSelectedOption(selectedOptionAux)
     }
 
   }, [selectedOptionAux])

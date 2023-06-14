@@ -8,27 +8,32 @@ import Navbar from 'i/components/Navbar';
 import Error404 from 'i/components/Error404';
 
 function CarView() {
-  const router = useRouter();
   const [carData, setCarData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [varaux, setVarAux] = useState();
+  let count = 1; 
+  const router = useRouter();
   const { id } = router.query;
 
   useEffect(() => {
-    if(id){
+    if(id && count===1){
+      count=2;
+      console.log('entre a if')
       setLoading(true);
       const fetchData = async () => {
         try {
           const response = await fetch(`http://localhost:3001/cars/${id}`, {method: 'GET', headers: { 'Content-Type': 'application/json'}});
           if (response.ok) {
             const data = await response.json();
+            console.log('entre a if ok')
             setCarData(data);
             setLoading(false);
           } else {
             throw new Error('Error, there was a problem while fetching the cars.');
           }
         } catch (error) {
+          console.log('entre a else error')
           setError(error.message);
           setLoading(false);
         } 

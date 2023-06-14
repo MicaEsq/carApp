@@ -44,7 +44,6 @@ export default function ModifyCar(){
           const response = await fetch(`http://localhost:3001/cars/${id}`);
           if (response.ok) {
             const data = await response.json();
-
             setDataReceived(data);
             setDataToUse(JSON.parse(JSON.stringify(data)));
             setSelectedVersion(data.version)
@@ -102,15 +101,10 @@ export default function ModifyCar(){
 
   async function getFilters(extension, primary){
       try{
-          let url = 'http://localhost:3001/filters';
-          let method = 'POST';
-          let data = {primaryFilter: primary, type: extension };
-          var requestOptions = {};
-
-          requestOptions = {
-              method: method,
-              headers: { 'Content-Type': 'application/json'},
-              body: JSON.stringify(data)
+          let url = `http://localhost:3001/filters?type=${extension}&primaryFilter=${primary}`;
+          var requestOptions = {
+              method: 'GET',
+              headers: { 'Content-Type': 'application/json'}
           };
           
           const response = await fetch(url, requestOptions);
