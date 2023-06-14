@@ -21,23 +21,24 @@ export default function Filters({setFiltersApplied, filtersApplied, setModifiedF
 
   useEffect(() => {
     if(prevFiltersApplied.current !== filtersApplied){
-        let lastFilterApplied = filtersApplied.filter(x => prevFiltersApplied.current.indexOf(x) === -1);
-   
-        if(lastFilterApplied[0].label === 'brands'){
-          getFilters('models', lastFilterApplied[0].idOption);
-          prevFiltersApplied.current = filtersApplied;
-        }
-        else if(lastFilterApplied[0].label === 'states'){
-          getFilters('cities', lastFilterApplied[0].idOption);
-          prevFiltersApplied.current = filtersApplied;
-        }
-        else if(lastFilterApplied[0].label === 'models'){
-          getFilters('brands', lastFilterApplied[0].idOption);
-          prevFiltersApplied.current = filtersApplied;
-        }
-        else if(lastFilterApplied[0].label === 'models'){
-          getFilters('states', lastFilterApplied[0].idOption);
-          prevFiltersApplied.current = filtersApplied;
+        if(prevFiltersApplied.current.length < filtersApplied.length){
+          let lastFilterApplied = filtersApplied.filter(x => prevFiltersApplied.current.indexOf(x) === -1);
+          if(lastFilterApplied[0].label === 'brands'){
+            getFilters('models', lastFilterApplied[0].idOption);
+            prevFiltersApplied.current = filtersApplied;
+          }
+          else if(lastFilterApplied[0].label === 'states'){
+            getFilters('cities', lastFilterApplied[0].idOption);
+            prevFiltersApplied.current = filtersApplied;
+          }
+          else if(lastFilterApplied[0].label === 'models'){
+            getFilters('brands', lastFilterApplied[0].idOption);
+            prevFiltersApplied.current = filtersApplied;
+          }
+          else if(lastFilterApplied[0].label === 'models'){
+            getFilters('states', lastFilterApplied[0].idOption);
+            prevFiltersApplied.current = filtersApplied;
+          }
         }
     }
   }, [filtersApplied])
