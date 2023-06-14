@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 function CardCuadricula({product}) {
   const [favorites, setFavorites] = useState([]);
   const router = useRouter();
-  
+
   useEffect(() => {
     let keys = Object.keys(sessionStorage);
     
@@ -20,7 +20,7 @@ function CardCuadricula({product}) {
   }, [])
 
   return (
-    <div key={product.id} className="my-2 mb-3 bg-[#ffffff] rounded-lg shadow-md cursor-pointer" onClick={() => router.push(`/carView/${product.id}`)}>
+    <div key={product.id} className="my-2 mb-3 bg-[#ffffff] rounded-lg shadow-md cursor-pointer">
       <div className="group relative m-2">
         <div className="w-full relative">
           <button className="rounded-full bg-white absolute z-10 top-2 right-2 p-1.5" onClick={() => setFavorites(modifyFavorites(product, favorites))}>
@@ -35,7 +35,7 @@ function CardCuadricula({product}) {
           </button>
           <Carousel image={product.image}></Carousel>
         </div>
-        <div className="mt-3 pl-2 pb-3 flex justify-between">
+        <div className="mt-3 pl-2 pb-3 flex justify-between" onClick={() => router.push(`/carView/${product.id}`)}>
           <div className="">
             <div className='flex flex-row'>
               <Badge data={product.year} type={"card-details"}/>
