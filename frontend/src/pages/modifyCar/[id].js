@@ -14,8 +14,8 @@ export default function ModifyCar(){
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState("");
   const transmissionOptions = [{id:1, name:'Automatic'}, {id:2, name:'Manual'}];
-  const promfinOptions = [{id:1, name:'Yes'}, {id:2, name:'No'}];
-  const conditionOptions = [{id:1, name:'New'}, {id:2, name:'Used'}];
+  const promfinOptions = [{id:true, name:'Yes'}, {id:false, name:'No'}];
+  const conditionOptions = [{id:true, name:'New'}, {id:false, name:'Used'}];
   const [selectedVersion, setSelectedVersion] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
@@ -199,8 +199,6 @@ export default function ModifyCar(){
 
   };
 
-  
-
   return (
     <>
       <Navbar></Navbar>
@@ -253,10 +251,10 @@ export default function ModifyCar(){
             </div>
           </div>
           <div>
-            <Dropdown label='Promoted' selectedOption={dataToUse.promoted === true ? promfinOptions[0] : promfinOptions[1]} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={promfinOptions} updateFilter={''}/>
+            <Dropdown label='Promoted' selectedOption={dataToUse.promoted ? promfinOptions[0] : promfinOptions[1]} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={promfinOptions} updateFilter={''}/>
           </div>
           <div>
-            <Dropdown label='Financing' selectedOption={dataToUse.financing === true ? promfinOptions[0] : promfinOptions[1]} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={promfinOptions} updateFilter={''}/>
+            <Dropdown label='Financing' selectedOption={dataToUse.financing ? promfinOptions[0] : promfinOptions[1]} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={promfinOptions} updateFilter={''}/>
           </div>
           <div>
               <Dropdown label='State' selectedOption={dataToUse.state} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={states} updateFilter={setSelectedState}/>
@@ -264,31 +262,14 @@ export default function ModifyCar(){
           <div>
               <Dropdown label='City' selectedOption={dataToUse.city} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={cities} updateFilter={setSelectedCity}/>
           </div>
-          {/* <div>
-            <div className="flex items-center justify-between">
-              <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                Password
-              </label>
-              <div className="text-sm">
-                <a href="#" className="font-semibold text-indigo-500 hover:text-indigo-400">
-                  Forgot password?
-                </a>
-              </div>
-            </div>
-            <div className="mt-2">
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                className="block w-full rounded-md border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
-                /* onChange={handlePasswordChange} 
-              />
-            </div>
-          </div> */}
-
-          <div className='h-full'>
+          <div className='flex flex-row gap-2 col-end-4 col-span-1'>
+            <button
+              type="submit"
+              className="flex w-full justify-center rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-indigo-500 border border-indigo-500 shadow-sm hover:bg-indigo-500 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+              onClick={()=>router.push(`/carView/${carData.id}`)}
+            >
+              Cancel
+            </button>
             <button
               type="submit"
               className="flex w-full justify-center rounded-lg bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
@@ -297,7 +278,6 @@ export default function ModifyCar(){
               Submit
             </button>
           </div>
-      
         </div>}
       </div>
   </>

@@ -13,12 +13,7 @@ export default function Dropdown({label, selectedOption, allData, setSelectedOpt
     let dataux= allData;
     if(allData !== null && updateFilter !== null){
         if(label === 'Financing' || label === 'Promoted'){
-            if(selectedOptionAux.name === 'Yes'){
-                dataux[label.toLowerCase()] = true;
-            }
-            else{
-                dataux[label.toLowerCase()] = false;
-            }
+            dataux[label.toLowerCase()] = selectedOptionAux.id;
             setSelectedOption(dataux);
         }
         else if(label === 'Transmission' || label === 'Condition'){
@@ -70,7 +65,7 @@ export default function Dropdown({label, selectedOption, allData, setSelectedOpt
                     </Listbox.Option>) : (
                     allOptions.map((option) => (
                     <Listbox.Option
-                        key={option.id}
+                        key={'option-' + option.id}
                         className={({ active }) =>
                         classNames(
                             active ? 'bg-indigo-600 text-white' : 'text-gray-900',

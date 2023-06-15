@@ -94,19 +94,23 @@ export default function NewCar(){
       }
   }
 
-  function formatData(){ //enhance this
+  function formatData(){
 
-    let result = {brand_id: selectedBrand !== "" ? selectedBrand.id : null, model_id: selectedModel !== "" ? selectedModel.id : null,
-     state_id: selectedState !== "" ? selectedState.id : null
-     , city_id: selectedCity !== "" ? selectedCity.id : null,
+    let result = {
+      brand_id: selectedBrand !== "" ? selectedBrand.id : null,
+      model_id: selectedModel !== "" ? selectedModel.id : null,
+      state_id: selectedState !== "" ? selectedState.id : null,
+      city_id: selectedCity !== "" ? selectedCity.id : null,
       year: selectedYear !== "" ? selectedBrand.id : null,
-       version: selectedVersion !== "" ? selectedBrand.id : null,
-        transmission: selectedTransimission !== "" ? selectedTransimission.name : null,
-         condition: selectedCondition !== "" ? selectedCondition.name : null,
-          price: selectedPrice !== "" ? selectedPrice : null,
-           mileage: selectedMileage !== "" ? selectedMileage : null,
-            promoted: selectedPromoted !== "" ? selectedPromoted.name : null,
-             financing: selectedFinancing !== "" ? selectedFinancing.name : null};
+      version: selectedVersion !== "" ? selectedBrand.id : null,
+      transmission: selectedTransimission !== "" ? selectedTransimission.name : null,
+      condition: selectedCondition !== "" ? selectedCondition.name : null,
+      price: selectedPrice !== "" ? selectedPrice : null,
+      mileage: selectedMileage !== "" ? selectedMileage : null,
+      promoted: selectedPromoted !== "" ? selectedPromoted.name : null,
+      financing: selectedFinancing !== "" ? selectedFinancing.name : null
+    };
+  
     return result;
   }
     
@@ -212,10 +216,10 @@ export default function NewCar(){
             </div>
           </div>
           <div>
-            <Dropdown label='Promoted' selectedOption={selectedPromoted} allData={null} setSelectedOption={setSelectedPromoted} allOptions={[{id:1, name:'Yes'}, {id:2, name:'No'}]} updateFilter={null}/>
+            <Dropdown label='Promoted' selectedOption={selectedPromoted} allData={null} setSelectedOption={setSelectedPromoted} allOptions={[{id:true, name:'Yes'}, {id:false, name:'No'}]} updateFilter={null}/>
           </div>
           <div>
-            <Dropdown label='Financing' selectedOption={selectedFinancing} allData={null} setSelectedOption={setSelectedFinancing} allOptions={[{id:1, name:'Yes'}, {id:2, name:'No'}]} updateFilter={null}/>
+            <Dropdown label='Financing' selectedOption={selectedFinancing} allData={null} setSelectedOption={setSelectedFinancing} allOptions={[{id:true, name:'Yes'}, {id:false, name:'No'}]} updateFilter={null}/>
           </div>
           <div>
               <Dropdown label='State' selectedOption={selectedState} allData={null} setSelectedOption={setSelectedState} allOptions={states} updateFilter={null}/>
