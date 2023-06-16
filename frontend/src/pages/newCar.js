@@ -21,6 +21,15 @@ export default function NewCar(){
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
   const [selectedMileage, setSelectedMileage] = useState("");
+  const [selectedObservation, setSelectedObservation] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedCapacity, setSelectedCapacity] = useState("");
+  const [selectedFuel, setSelectedFuel] = useState(null);
+  const transmissionOptions = [{id:1, name:'Automatic'}, {id:2, name:'Manual'}];
+  const promfinOptions = [{id:true, name:'Yes'}, {id:false, name:'No'}];
+  const conditionOptions = [{id:true, name:'New'}, {id:false, name:'Used'}];
+  const fuels = [{id:1, name:'Petrol'}, {id:2, name:'Diesel'}, {id:3, name:'Gas'}, {id:4, name:'Bio-Diesel'}, {id:5, name:'Electric'}, {id:6, name:'Other'}];
+
   const [loading, setLoading] = useState("");
   const [error, setError] = useState("");
 
@@ -108,7 +117,11 @@ export default function NewCar(){
       price: selectedPrice !== "" ? selectedPrice : null,
       mileage: selectedMileage !== "" ? selectedMileage : null,
       promoted: selectedPromoted !== "" ? selectedPromoted.name : null,
-      financing: selectedFinancing !== "" ? selectedFinancing.name : null
+      financing: selectedFinancing !== "" ? selectedFinancing.name : null,
+      observation: selectedObservation !== "" ? selectedObservation : null,
+      color: selectedColor !== "" ? selectedColor : null,
+      capacity: selectedCapacity !== "" ? selectedCapacity : null,
+      fuel: selectedFuel !== "" ? selectedFuel.name : null,
     };
   
     return result;
@@ -127,7 +140,15 @@ export default function NewCar(){
     else if(event.target.name === 'mileage'){
       setSelectedMileage(event.target.value);
     }
-    else{}
+    else if(event.target.name === 'observation'){
+      setSelectedMileage(event.target.value);
+    }
+    else if(event.target.name === 'color'){
+      setSelectedMileage(event.target.value);
+    }
+    else if(event.target.name === 'capacity'){
+      setSelectedMileage(event.target.value);
+    }
   }
   
 
@@ -174,7 +195,7 @@ export default function NewCar(){
         <h3 className="text-sm leading-9 tracking-tight text-gray-900">
             All fields with an * are Required
         </h3>
-        <div className="grid gap-4 grid-cols-3 mt-10 space-y-6 px-6 shadow-md rounded-lg pb-5">
+        <div className="grid gap-4 grid-cols-4 mt-10 space-y-6 px-6 shadow-md rounded-lg pb-5">
           <div className='mt-6'>
               <Dropdown label='Brand' selectedOption={selectedBrand} allData={null} setSelectedOption={setSelectedBrand} allOptions={brands} updateFilter={null}/>
           </div>
@@ -195,11 +216,13 @@ export default function NewCar(){
                 onChange={handleChange} />
             </div>
           </div>
-          <div>
-            <Dropdown label='Transmission' selectedOption={selectedTransimission} allData={null} setSelectedOption={setSelectedTransimission} allOptions={[{id:1, name:'Automatic'}, {id:2, name:'Manual'}]} updateFilter={null}/>
-          </div>
-          <div>
-            <Dropdown label='Condition' selectedOption={selectedCondition} allData={null} setSelectedOption={setSelectedCondition} allOptions={[{id:1, name:'New'}, {id:2, name:'Used'}]} updateFilter={null}/>
+          <div className='flex flex-row gap-4'>
+            <div className='w-full'>
+              <Dropdown label='Transmission' selectedOption={selectedTransimission} allData={null} setSelectedOption={setSelectedTransimission} allOptions={transmissionOptions} updateFilter={null}/>
+            </div>
+            <div className='w-full'>
+              <Dropdown label='Condition' selectedOption={selectedCondition} allData={null} setSelectedOption={setSelectedCondition} allOptions={conditionOptions} updateFilter={null}/>
+            </div>
           </div>
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Price</label>
@@ -208,18 +231,25 @@ export default function NewCar(){
                 onChange={handleChange}/>
             </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium leading-6 text-gray-900">Mileage</label>
-            <div className="mt-2">
-              <input name="mileage" required className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
-                onChange={handleChange}/>
+          <div className='flex flex-row gap-4'>
+            <div className='w-full'>
+              <label className="block text-sm font-medium leading-6 text-gray-900">{"Mileage (in km)"}</label>
+              <div className="mt-2">
+                <input name="mileage" required className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                  onChange={handleChange}/>
+              </div>
+            </div>
+            <div className='w-full'>
+                <Dropdown label='Fuel' selectedOption={selectedFuel} allData={null} setSelectedOption={setSelectedFuel} allOptions={fuels} updateFilter={''}/>
             </div>
           </div>
-          <div>
-            <Dropdown label='Promoted' selectedOption={selectedPromoted} allData={null} setSelectedOption={setSelectedPromoted} allOptions={[{id:true, name:'Yes'}, {id:false, name:'No'}]} updateFilter={null}/>
-          </div>
-          <div>
-            <Dropdown label='Financing' selectedOption={selectedFinancing} allData={null} setSelectedOption={setSelectedFinancing} allOptions={[{id:true, name:'Yes'}, {id:false, name:'No'}]} updateFilter={null}/>
+          <div className='flex flex-row gap-4'>
+            <div className='w-full'>
+              <Dropdown label='Promoted' selectedOption={selectedPromoted} allData={null} setSelectedOption={setSelectedPromoted} allOptions={promfinOptions} updateFilter={null}/>
+            </div>
+            <div className='w-full'>
+              <Dropdown label='Financing' selectedOption={selectedFinancing} allData={null} setSelectedOption={setSelectedFinancing} allOptions={promfinOptions} updateFilter={null}/>
+            </div>
           </div>
           <div>
               <Dropdown label='State' selectedOption={selectedState} allData={null} setSelectedOption={setSelectedState} allOptions={states} updateFilter={null}/>
@@ -227,42 +257,47 @@ export default function NewCar(){
           <div>
               <Dropdown label='City' selectedOption={selectedCity} allData={null} setSelectedOption={setSelectedCity} allOptions={cities} updateFilter={null}/>
           </div>
-          {/* <div>
-            <div className="flex items-center justify-between">
-              <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                Password
-              </label>
-              <div className="text-sm">
-                <a href="#" className="font-semibold text-indigo-500 hover:text-indigo-400">
-                  Forgot password?
-                </a>
-              </div>
-            </div>
+          <div>
+            <label className="block text-sm font-medium leading-6 text-gray-900">Color</label>
             <div className="mt-2">
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                className="block w-full rounded-md border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
-                /* onChange={handlePasswordChange} 
-              />
+              <input name="color" required value={selectedColor} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                onChange={(e)=>setSelectedColor(e.target.value)}/>
             </div>
-          </div> */}
-
-          <div className='h-full'>
+          </div>
+          <div>
+            <label className="block text-sm font-medium leading-6 text-gray-900">{"Capacity (# of people)"}</label>
+            <div className="mt-2">
+              <input name="capacity" required value={selectedCapacity} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                onChange={(e)=>setSelectedCapacity(e.target.value)}/>
+            </div>
+          </div>
+          <div className='col-start-1 col-span-2'>
+            <label className="block text-sm font-medium leading-6 text-gray-900">Observation/Comments</label>
+            <div className="mt-2">
+              <textarea name="observation" required rows={2} value={selectedObservation} className="block w-full h-16 rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                onChange={(e)=>setSelectedObservation(e.target.value)}/>
+            </div>
+          </div>
+          <div></div>
+          <div className='flex flex-row gap-2 col-end-2 col-span-1'>
             <button
               type="submit"
-              className="flex w-full justify-center rounded-lg bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+              className="flex w-full justify-center rounded-lg px-3 pt-2 pb-1 text-sm font-semibold leading-6 text-indigo-500 border border-indigo-500 shadow-sm hover:bg-indigo-500 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+              onClick={()=>router.push(`/carView/${id}`)}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="flex w-full justify-center rounded-lg bg-indigo-500 px-3 pt-2 pb-1 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
               onClick={handleSubmit}
             >
               Submit
             </button>
           </div>
+        </div>
       
         </div>
-      </div>
   </>
   );
 };

@@ -213,7 +213,11 @@ const getCarById = (request, response) => {
             c.mileage,
             c.image,
             c.promoted,
-            c.financing
+            c.financing,
+            c.observation,
+            c.color,
+            c.capacity,
+            c.fuel
         FROM
             cars c
             LEFT JOIN cities ci ON c.city_id = ci.id
@@ -238,9 +242,9 @@ const getCarById = (request, response) => {
 }
 
 const createCar = (request, response) => {
-    const { brand_id, model_id, state_id, city_id, year, version, transmission, condition, price, mileage, promoted,financing } = request.body
+    const { brand_id, model_id, state_id, city_id, year, version, transmission, condition, price, mileage, promoted,financing, observation, color, capacity, fuel } = request.body
    
-    connectionPool.query('INSERT INTO cars (brand_id, model_id, state_id, city_id, year, version, transmission, condition, price, mileage, promoted,financing) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *', [brand_id, model_id, state_id, city_id, year, version, transmission, condition, price, mileage, promoted,financing], (error, results) => {
+    connectionPool.query('INSERT INTO cars (brand_id, model_id, state_id, city_id, year, version, transmission, condition, price, mileage, promoted,financing, observation, color, capacity, fuel) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *', [brand_id, model_id, state_id, city_id, year, version, transmission, condition, price, mileage, promoted,financing, observation, color, capacity, fuel], (error, results) => {
       if (error) {
         response.status(404).send({message:`Car could not be added`})
         throw error;
@@ -266,7 +270,7 @@ const updateCar = (request, response) => {
     query = query.slice(0, -1); //remove las added comma
     query += ' WHERE id = $' + (updateParams.length + 1) +';';
     updateParams.push(id);
-
+    
     connectionPool.query(query, updateParams, (error, results) => {
         if (error) {
             response.status(400).send({message:`Car with id: ${id} could not be modified ${error}`})
@@ -320,7 +324,7 @@ const getStates = (request, response) => {
 
 const getFilters = (request, response) => {
     const { type, primaryFilter } = request.query;
-    
+
     if(primaryFilter === ''){
         connectionPool.query('SELECT * FROM ' + type + ';', (error, results) => {
             if (error) {

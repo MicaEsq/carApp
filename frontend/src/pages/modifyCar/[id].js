@@ -16,6 +16,7 @@ export default function ModifyCar(){
   const transmissionOptions = [{id:1, name:'Automatic'}, {id:2, name:'Manual'}];
   const promfinOptions = [{id:true, name:'Yes'}, {id:false, name:'No'}];
   const conditionOptions = [{id:true, name:'New'}, {id:false, name:'Used'}];
+  const fuels = [{id:1, name:'Petrol'}, {id:2, name:'Diesel'}, {id:3, name:'Gas'}, {id:4, name:'Bio-Diesel'}, {id:5, name:'Electric'}, {id:6, name:'Other'}];
   const [selectedVersion, setSelectedVersion] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
@@ -24,6 +25,10 @@ export default function ModifyCar(){
   const [dataToUse, setDataToUse] = useState("");
   const [loading, setLoading] = useState("");
   const [error, setError] = useState("");
+  const [selectedObservation, setSelectedObservation] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedCapacity, setSelectedCapacity] = useState("");
+  const [selectedFuel, setSelectedFuel] = useState("");
 
   let count = 1; 
   const router = useRouter();
@@ -50,6 +55,9 @@ export default function ModifyCar(){
             setSelectedYear(data.year)
             setSelectedPrice(data.price)
             setSelectedMileage(data.mileage)
+            setSelectedObservation(data.observation === null ? "" : data.observation)
+            setSelectedColor(data.color)
+            setSelectedCapacity(data.capacity)
 
             prevSelectedBrandRef.current = data.brand;
             prevSelectedModelRef.current = data.model;
@@ -134,15 +142,15 @@ export default function ModifyCar(){
     let data = {};
 
     for(let newData in dataToUse){ 
-      if(typeof(dataToUse[newData])==='object' && newData !== 'image'){
+      if(typeof(dataToUse[newData])==='object' && newData !== 'image' && dataToUse[newData] !== null){
           if(dataToUse[newData].id !== dataReceived[newData].id){
             let name = newData + '_id';
             data[name]=dataToUse[newData].id;
           }
       }
-      else if(newData ==='year' || newData ==='version' || newData ==='price' || newData ==='mileage'){
+      else if(newData ==='year' || newData ==='version' || newData ==='price' || newData ==='mileage' || newData === 'observation' || newData === 'color' || newData === 'capacity'){
           if(newData === 'year'){
-            if(selectedYear.localeCompare(dataReceived[newData].toString())){
+            if(selectedYear.toString().localeCompare(dataReceived[newData].toString())){
               data[newData]=selectedYear;
             }
           }
@@ -159,6 +167,31 @@ export default function ModifyCar(){
           else if(newData === 'mileage'){
             if(selectedMileage===dataReceived[newData].toString()){
               data[newData]=selectedMileage;
+            }
+          }
+          else if(newData === 'observation'){
+            if(dataReceived[newData] !== null && selectedObservation!== ""){
+              if(selectedObservation.localeCompare(dataReceived[newData].toString())){
+                data[newData]=selectedObservation;
+              }
+            }
+            else if(dataReceived[newData] !== null || selectedObservation!== ""){
+              if(dataReceived[newData] === null){
+                data[newData]=selectedObservation;
+              }
+              else{
+                data[newData]=null;
+              }
+            }
+          }
+          else if(newData === 'color'){
+            if(selectedColor.localeCompare(dataReceived[newData].toString())){
+              data[newData]=selectedColor;
+            }
+          }
+          else if(newData === 'capacity'){
+            if(selectedCapacity.localeCompare(dataReceived[newData].toString())){
+              data[newData]=selectedCapacity;
             }
           }
       }
@@ -184,7 +217,7 @@ export default function ModifyCar(){
       headers: { 'Content-Type': 'application/json'},
       body: JSON.stringify(data)
     };
-
+    console.log('data a mandar', data);
     try {
       const response = await fetch(url, requestOptions);
       if (response.ok) {
@@ -199,6 +232,14 @@ export default function ModifyCar(){
 
   };
 
+  function getSelectedOptionFuel(){
+    for(let index in fuels){
+      if(fuels[index].name === dataToUse.fuel){
+        return fuels[index]
+      }
+    }
+  }
+
   return (
     <>
       <Navbar></Navbar>
@@ -209,7 +250,7 @@ export default function ModifyCar(){
         <h3 className="text-sm leading-9 tracking-tight text-gray-900">
             All fields with an * are Required
         </h3>
-        {dataToUse !== "" && <div className="grid gap-4 grid-cols-3 mt-10 space-y-6 px-6 shadow-md rounded-lg pb-5">
+        {dataToUse !== "" && <div className="grid gap-4 grid-cols-4 mt-10 space-y-6 px-6 shadow-md rounded-lg pb-5">
            <div className='mt-6'>
               <Dropdown label='Brand' selectedOption={dataToUse.brand} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={brands} updateFilter={setSelectedBrand}/>
           </div>
@@ -230,11 +271,13 @@ export default function ModifyCar(){
                 onChange={(e)=>setSelectedYear(e.target.value)} />
             </div>
           </div>
-          <div>
+          <div className='flex flex-row gap-4'>
+            <div className='w-full'>
             <Dropdown label='Transmission' selectedOption={dataToUse.transmission === 'Automatic' ? transmissionOptions[0] : transmissionOptions[1]} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={transmissionOptions} updateFilter={''}/>
-          </div>
-          <div>
+            </div>
+            <div className='w-full'>
             <Dropdown label='Condition' selectedOption={dataToUse.condition === 'New' ? conditionOptions[0] : conditionOptions[1]} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={conditionOptions} updateFilter={''}/>
+            </div>
           </div>
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Price</label>
@@ -243,18 +286,25 @@ export default function ModifyCar(){
                 onChange={(e)=>setSelectedPrice(e.target.value)}/>
             </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium leading-6 text-gray-900">Mileage</label>
-            <div className="mt-2">
-              <input name="mileage" required value={selectedMileage} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
-                onChange={(e)=>setSelectedMileage(e.target.value)}/>
+          <div className='flex flex-row gap-4'>
+            <div className='w-full'>
+              <label className="block text-sm font-medium leading-6 text-gray-900">{"Mileage (in km)"}</label>
+              <div className="mt-2">
+                <input name="mileage" required value={selectedMileage} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                  onChange={(e)=>setSelectedMileage(e.target.value)}/>
+              </div>
+            </div>
+            <div className='w-full'>
+                <Dropdown label='Fuel' selectedOption={getSelectedOptionFuel} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={fuels} updateFilter={''}/>
             </div>
           </div>
-          <div>
-            <Dropdown label='Promoted' selectedOption={dataToUse.promoted ? promfinOptions[0] : promfinOptions[1]} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={promfinOptions} updateFilter={''}/>
-          </div>
-          <div>
-            <Dropdown label='Financing' selectedOption={dataToUse.financing ? promfinOptions[0] : promfinOptions[1]} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={promfinOptions} updateFilter={''}/>
+          <div className='flex flex-row gap-4'>
+            <div className='w-full'>
+              <Dropdown label='Promoted' selectedOption={dataToUse.promoted ? promfinOptions[0] : promfinOptions[1]} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={promfinOptions} updateFilter={''}/>
+            </div>
+            <div className='w-full'>
+              <Dropdown label='Financing' selectedOption={dataToUse.financing ? promfinOptions[0] : promfinOptions[1]} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={promfinOptions} updateFilter={''}/>
+            </div>
           </div>
           <div>
               <Dropdown label='State' selectedOption={dataToUse.state} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={states} updateFilter={setSelectedState}/>
@@ -262,17 +312,39 @@ export default function ModifyCar(){
           <div>
               <Dropdown label='City' selectedOption={dataToUse.city} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={cities} updateFilter={setSelectedCity}/>
           </div>
-          <div className='flex flex-row gap-2 col-end-4 col-span-1'>
+          <div>
+            <label className="block text-sm font-medium leading-6 text-gray-900">Color</label>
+            <div className="mt-2">
+              <input name="color" required value={selectedColor} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                onChange={(e)=>setSelectedColor(e.target.value)}/>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium leading-6 text-gray-900">{"Capacity (# of people)"}</label>
+            <div className="mt-2">
+              <input name="capacity" required value={selectedCapacity} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                onChange={(e)=>setSelectedCapacity(e.target.value)}/>
+            </div>
+          </div>
+          <div className='col-start-1 col-span-2'>
+            <label className="block text-sm font-medium leading-6 text-gray-900">Observation/Comments</label>
+            <div className="mt-2">
+              <textarea name="observation" required rows={2} value={selectedObservation} className="block w-full h-16 rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                onChange={(e)=>setSelectedObservation(e.target.value)}/>
+            </div>
+          </div>
+          <div></div>
+          <div className='flex flex-row gap-2 col-end-2 col-span-1'>
             <button
               type="submit"
-              className="flex w-full justify-center rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-indigo-500 border border-indigo-500 shadow-sm hover:bg-indigo-500 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-              onClick={()=>router.push(`/carView/${carData.id}`)}
+              className="flex w-full justify-center rounded-lg px-3 pt-2 pb-1 text-sm font-semibold leading-6 text-indigo-500 border border-indigo-500 shadow-sm hover:bg-indigo-500 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+              onClick={()=>router.push(`/carView/${id}`)}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex w-full justify-center rounded-lg bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+              className="flex w-full justify-center rounded-lg bg-indigo-500 px-3 pt-2 pb-1 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
               onClick={handleSubmit}
             >
               Submit

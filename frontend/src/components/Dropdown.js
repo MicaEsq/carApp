@@ -11,12 +11,12 @@ export default function Dropdown({label, selectedOption, allData, setSelectedOpt
   useEffect(() => {
 
     let dataux= allData;
-    if(allData !== null && updateFilter !== null){
+    if(allData !== null && updateFilter !== null && selectedOptionAux !== null && selectedOptionAux !== undefined){
         if(label === 'Financing' || label === 'Promoted'){
             dataux[label.toLowerCase()] = selectedOptionAux.id;
             setSelectedOption(dataux);
         }
-        else if(label === 'Transmission' || label === 'Condition'){
+        else if(label === 'Transmission' || label === 'Condition' || label==='Fuel'){
             dataux[label.toLowerCase()] = selectedOptionAux.name;
             setSelectedOption(dataux);
         }

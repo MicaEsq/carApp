@@ -31,7 +31,7 @@ export default function CardHorizontal({product}) {
               </svg>
             }
           </button>
-          <Carousel image={product.image}></Carousel>
+          <Carousel image={product.image} arrowsConstantVisibility={false}></Carousel>
         </div>
         <div className="col-span-2 pl-3 justify-between">
           <div className="">

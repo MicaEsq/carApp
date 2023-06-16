@@ -33,7 +33,7 @@ function CardCuadricula({product}) {
               </svg>
             }
           </button>
-          <Carousel image={product.image}></Carousel>
+          <Carousel image={product.image} arrowsConstantVisibility={false}></Carousel>
         </div>
         <div className="mt-3 pl-2 pb-3 flex justify-between" onClick={() => router.push(`/carView/${product.id}`)}>
           <div className="">
