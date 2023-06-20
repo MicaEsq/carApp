@@ -106,22 +106,22 @@ export default function NewCar(){
   function formatData(){
 
     let result = {
-      brand_id: selectedBrand !== "" ? selectedBrand.id : null,
-      model_id: selectedModel !== "" ? selectedModel.id : null,
-      state_id: selectedState !== "" ? selectedState.id : null,
-      city_id: selectedCity !== "" ? selectedCity.id : null,
+      brand_id: selectedBrand !== null ? selectedBrand.id : null,
+      model_id: selectedModel !== null ? selectedModel.id : null,
+      state_id: selectedState !== null ? selectedState.id : null,
+      city_id: selectedCity !== null ? selectedCity.id : null,
       year: selectedYear !== "" ? selectedBrand.id : null,
       version: selectedVersion !== "" ? selectedBrand.id : null,
-      transmission: selectedTransimission !== "" ? selectedTransimission.name : null,
-      condition: selectedCondition !== "" ? selectedCondition.name : null,
+      transmission: selectedTransimission !== null ? selectedTransimission.name : null,
+      condition: selectedCondition !== null ? selectedCondition.name : null,
       price: selectedPrice !== "" ? selectedPrice : null,
       mileage: selectedMileage !== "" ? selectedMileage : null,
-      promoted: selectedPromoted !== "" ? selectedPromoted.name : null,
-      financing: selectedFinancing !== "" ? selectedFinancing.name : null,
+      promoted: selectedPromoted !== null ? selectedPromoted.name : null,
+      financing: selectedFinancing !== null ? selectedFinancing.name : null,
       observation: selectedObservation !== "" ? selectedObservation : null,
       color: selectedColor !== "" ? selectedColor : null,
       capacity: selectedCapacity !== "" ? selectedCapacity : null,
-      fuel: selectedFuel !== "" ? selectedFuel.name : null,
+      fuel: selectedFuel !== null ? selectedFuel.name : null,
     };
   
     return result;

@@ -36,15 +36,3 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result!
-
-
-## Disclaimer
-
-This is a simple web not aimed to be a car e-commerce yet.
-Missing functionalities:
- - Filters displayed in mobile view.
- - Tests.
- - Navigation bar.
-
-
-
