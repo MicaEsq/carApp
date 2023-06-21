@@ -250,7 +250,7 @@ export default function ModifyCar(){
         <h3 className="text-sm leading-9 tracking-tight text-gray-900">
             All fields with an * are Required
         </h3>
-        {dataToUse !== "" && <div className="grid gap-4 grid-cols-4 mt-10 space-y-6 px-6 shadow-md rounded-lg pb-5">
+        {dataToUse !== "" && <div className="grid gap-4 grid-cols-2 md:grid-cols-4 mt-10 space-y-6 px-6 shadow-md rounded-lg pb-5">
            <div className='mt-6'>
               <Dropdown label='Brand' selectedOption={dataToUse.brand} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={brands} updateFilter={setSelectedBrand}/>
           </div>
@@ -333,8 +333,7 @@ export default function ModifyCar(){
                 onChange={(e)=>setSelectedObservation(e.target.value)}/>
             </div>
           </div>
-          <div></div>
-          <div className='flex flex-row gap-2 col-end-2 col-span-1'>
+          <div className='flex flex-row gap-2 col-span-2 md:col-end-2 md:col-span-1'>
             <button
               type="submit"
               className="flex w-full justify-center rounded-lg px-3 pt-2 pb-1 text-sm font-semibold leading-6 text-indigo-500 border border-indigo-500 shadow-sm hover:bg-indigo-500 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"

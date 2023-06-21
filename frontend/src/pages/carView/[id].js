@@ -140,14 +140,9 @@ function CarView() {
   return (
      <>
     <Navbar></Navbar>
-    {/* <p className="my-10 mx-5 text-sm text-gray-500">
-      <a href="/" className="font-semibold leading-6 text-indigo-500 hover:text-indigo-400">
-        {'Back to catalogue'}
-      </a>
-    </p> */}
     {carData.length !== 0 ? <div>
       <nav aria-label="Breadcrumb">
-        <ol role="list" className="flex max-w-2xl items-center space-x-2 mx-4 py-6 lg:max-w-7xl">
+        <ol role="list" className="flex max-w-2xl items-center space-x-2 mx-6 md:mx-4 py-6 lg:max-w-7xl">
           <li key={'cars-key-breadcrumb'}>
             <div className="flex items-center">
               <a href={'/'} className="mr-2 text-sm font-medium text-gray-900">{'Cars'}</a>
@@ -163,11 +158,11 @@ function CarView() {
           </li>
         </ol>
       </nav>
-      <div className="flex flex-row bg-white px-10 py-10 mx-8 rounded-lg shadow-lg">
-        <div className='w-full max-w-4xl pr-10'>
+      <div className="flex flex-col md:flex-row bg-white px-10 py-10 mx-8 rounded-lg shadow-lg">
+        <div className='w-full max-w-4xl md:pr-10'>
           <Carousel image={carData.image} arrowsConstantVisibility={true}></Carousel>
         </div>
-        <div className="w-3/4 pt-10 lg:grid lg:max-w-6xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8">
+        <div className="w-full md:w-3/4 pt-10 lg:grid lg:max-w-6xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8">
           <div className="pb-5 w-full lg:col-span-3 lg:border-b lg:border-gray-200 lg:pr-8">
             <div className='flex flex-row items-center justify-between'>
               <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{carData.brand.name + ' ' + carData.model.name + ' - ' + carData.version}</h1>

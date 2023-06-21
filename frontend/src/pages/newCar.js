@@ -195,11 +195,11 @@ export default function NewCar(){
         <h3 className="text-sm leading-9 tracking-tight text-gray-900">
             All fields with an * are Required
         </h3>
-        <div className="grid gap-4 grid-cols-4 mt-10 space-y-6 px-6 shadow-md rounded-lg pb-5">
+        <div className="grid gap-4 grid-col-2 md:grid-cols-4 mt-10 space-y-6 px-6 shadow-md rounded-lg pb-5">
           <div className='mt-6'>
               <Dropdown label='Brand' selectedOption={selectedBrand} allData={null} setSelectedOption={setSelectedBrand} allOptions={brands} updateFilter={null}/>
           </div>
-          <div>
+          <div className=''>
               <Dropdown label='Model' selectedOption={selectedModel} allData={null} setSelectedOption={setSelectedModel} allOptions={models} updateFilter={null}/>
           </div>
           <div>
@@ -216,7 +216,7 @@ export default function NewCar(){
                 onChange={handleChange} />
             </div>
           </div>
-          <div className='flex flex-row gap-4'>
+          <div className='flex flex-row col-span-2 gap-4 md:col-span-1'>
             <div className='w-full'>
               <Dropdown label='Transmission' selectedOption={selectedTransimission} allData={null} setSelectedOption={setSelectedTransimission} allOptions={transmissionOptions} updateFilter={null}/>
             </div>
@@ -231,7 +231,7 @@ export default function NewCar(){
                 onChange={handleChange}/>
             </div>
           </div>
-          <div className='flex flex-row gap-4'>
+          <div className='flex flex-row col-span-2 gap-4 md:col-span-1'>
             <div className='w-full'>
               <label className="block text-sm font-medium leading-6 text-gray-900">{"Mileage (in km)"}</label>
               <div className="mt-2">
@@ -243,7 +243,7 @@ export default function NewCar(){
                 <Dropdown label='Fuel' selectedOption={selectedFuel} allData={null} setSelectedOption={setSelectedFuel} allOptions={fuels} updateFilter={''}/>
             </div>
           </div>
-          <div className='flex flex-row gap-4'>
+          <div className='flex flex-row col-span-2 gap-4 md:col-span-1'>
             <div className='w-full'>
               <Dropdown label='Promoted' selectedOption={selectedPromoted} allData={null} setSelectedOption={setSelectedPromoted} allOptions={promfinOptions} updateFilter={null}/>
             </div>
@@ -278,8 +278,7 @@ export default function NewCar(){
                 onChange={(e)=>setSelectedObservation(e.target.value)}/>
             </div>
           </div>
-          <div></div>
-          <div className='flex flex-row gap-2 col-end-2 col-span-1'>
+          <div className='flex flex-row gap-2 col-span-2 md:col-end-2 md:col-span-1 '>
             <button
               type="submit"
               className="flex w-full justify-center rounded-lg px-3 pt-2 pb-1 text-sm font-semibold leading-6 text-indigo-500 border border-indigo-500 shadow-sm hover:bg-indigo-500 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
