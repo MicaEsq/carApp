@@ -31,7 +31,7 @@ function Carousel({image, arrowsConstantVisibility}) {
         </button>
         <img
             src={images[currentImageIndex]}
-            className="rounded-lg relative z-1"
+            className="rounded-lg relative z-0"
             height={"100%"}
             width={"100%"}
             alt={""}

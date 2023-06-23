@@ -110,8 +110,8 @@ export default function NewCar(){
       model_id: selectedModel !== null ? selectedModel.id : null,
       state_id: selectedState !== null ? selectedState.id : null,
       city_id: selectedCity !== null ? selectedCity.id : null,
-      year: selectedYear !== "" ? selectedBrand.id : null,
-      version: selectedVersion !== "" ? selectedBrand.id : null,
+      year: selectedYear !== "" ? selectedYear : null,
+      version: selectedVersion !== "" ? selectedVersion : null,
       transmission: selectedTransimission !== null ? selectedTransimission.name : null,
       condition: selectedCondition !== null ? selectedCondition.name : null,
       price: selectedPrice !== "" ? selectedPrice : null,
@@ -141,13 +141,13 @@ export default function NewCar(){
       setSelectedMileage(event.target.value);
     }
     else if(event.target.name === 'observation'){
-      setSelectedMileage(event.target.value);
+      setSelectedObservation(event.target.value);
     }
     else if(event.target.name === 'color'){
-      setSelectedMileage(event.target.value);
+      setSelectedColor(event.target.value);
     }
     else if(event.target.name === 'capacity'){
-      setSelectedMileage(event.target.value);
+      setSelectedCapacity(event.target.value);
     }
   }
   
@@ -195,7 +195,7 @@ export default function NewCar(){
         <h3 className="text-sm leading-9 tracking-tight text-gray-900">
             All fields with an * are Required
         </h3>
-        <div className="grid gap-4 grid-col-2 md:grid-cols-4 mt-10 space-y-6 px-6 shadow-md rounded-lg pb-5">
+        <div className="grid gap-4 grid-col-2 md:grid-cols-4 mt-5 md:mt-10 space-y-6 px-6 shadow-md rounded-lg pb-5">
           <div className='mt-6'>
               <Dropdown label='Brand' selectedOption={selectedBrand} allData={null} setSelectedOption={setSelectedBrand} allOptions={brands} updateFilter={null}/>
           </div>

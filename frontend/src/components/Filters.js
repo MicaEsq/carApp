@@ -242,7 +242,7 @@ export default function Filters({setFiltersApplied, filtersApplied, setModifiedF
   }
 
   return (
-    <div className="flex flex-col bg-white mt-16 rounded-lg">
+    <div className="flex flex-col bg-white mt-3 lg:mt-12 rounded-lg">
       {filters.map((filter, index) => {
         return <Disclosure key={filter}>
           {({ open }) => ( 

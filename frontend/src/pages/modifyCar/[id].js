@@ -250,7 +250,7 @@ export default function ModifyCar(){
         <h3 className="text-sm leading-9 tracking-tight text-gray-900">
             All fields with an * are Required
         </h3>
-        {dataToUse !== "" && <div className="grid gap-4 grid-cols-2 md:grid-cols-4 mt-10 space-y-6 px-6 shadow-md rounded-lg pb-5">
+        {dataToUse !== "" && <div className="grid gap-4 grid-cols-2 md:grid-cols-4 mt-5 md:mt-10 space-y-6 px-6 shadow-md rounded-lg pb-5">
            <div className='mt-6'>
               <Dropdown label='Brand' selectedOption={dataToUse.brand} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={brands} updateFilter={setSelectedBrand}/>
           </div>
@@ -260,18 +260,18 @@ export default function ModifyCar(){
           <div>
               <label className="block text-sm font-medium leading-6 text-gray-900">Version</label>
               <div className="mt-2">
-              <input name="version" required value={selectedVersion} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+              <input name="version" required value={selectedVersion} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 text-sm md:text-md shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:leading-6"
                   onChange={(e)=>setSelectedVersion(e.target.value)}/>
               </div>
           </div>
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Year</label>
             <div className="mt-2">
-              <input name="year" required value={selectedYear} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+              <input name="year" required value={selectedYear} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 text-sm md:text-md shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                 onChange={(e)=>setSelectedYear(e.target.value)} />
             </div>
           </div>
-          <div className='flex flex-row gap-4'>
+          <div className='flex flex-row col-span-2 gap-4 md:col-span-1'>
             <div className='w-full'>
             <Dropdown label='Transmission' selectedOption={dataToUse.transmission === 'Automatic' ? transmissionOptions[0] : transmissionOptions[1]} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={transmissionOptions} updateFilter={''}/>
             </div>
@@ -282,15 +282,15 @@ export default function ModifyCar(){
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Price</label>
             <div className="mt-2">
-              <input name="price" required value={selectedPrice} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+              <input name="price" required value={selectedPrice} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 text-sm md:text-md shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                 onChange={(e)=>setSelectedPrice(e.target.value)}/>
             </div>
           </div>
-          <div className='flex flex-row gap-4'>
+          <div className='flex flex-row col-span-2 gap-4 md:col-span-1'>
             <div className='w-full'>
               <label className="block text-sm font-medium leading-6 text-gray-900">{"Mileage (in km)"}</label>
               <div className="mt-2">
-                <input name="mileage" required value={selectedMileage} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+                <input name="mileage" required value={selectedMileage} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 text-sm md:text-md shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                   onChange={(e)=>setSelectedMileage(e.target.value)}/>
               </div>
             </div>
@@ -298,7 +298,7 @@ export default function ModifyCar(){
                 <Dropdown label='Fuel' selectedOption={getSelectedOptionFuel} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={fuels} updateFilter={''}/>
             </div>
           </div>
-          <div className='flex flex-row gap-4'>
+          <div className='flex flex-row col-span-2 gap-4 md:col-span-1'>
             <div className='w-full'>
               <Dropdown label='Promoted' selectedOption={dataToUse.promoted ? promfinOptions[0] : promfinOptions[1]} allData={dataToUse} setSelectedOption={setDataToUse} allOptions={promfinOptions} updateFilter={''}/>
             </div>
@@ -315,21 +315,21 @@ export default function ModifyCar(){
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">Color</label>
             <div className="mt-2">
-              <input name="color" required value={selectedColor} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+              <input name="color" required value={selectedColor} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 text-sm md:text-md shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                 onChange={(e)=>setSelectedColor(e.target.value)}/>
             </div>
           </div>
           <div>
             <label className="block text-sm font-medium leading-6 text-gray-900">{"Capacity (# of people)"}</label>
             <div className="mt-2">
-              <input name="capacity" required value={selectedCapacity} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+              <input name="capacity" required value={selectedCapacity} className="block w-full rounded-lg border py-1.5 pl-3 text-gray-900 text-sm md:text-md shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                 onChange={(e)=>setSelectedCapacity(e.target.value)}/>
             </div>
           </div>
           <div className='col-start-1 col-span-2'>
             <label className="block text-sm font-medium leading-6 text-gray-900">Observation/Comments</label>
             <div className="mt-2">
-              <textarea name="observation" required rows={2} value={selectedObservation} className="block w-full h-16 rounded-lg border py-1.5 pl-3 text-gray-900 shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
+              <textarea name="observation" required rows={2} value={selectedObservation} className="block w-full h-16 rounded-lg border py-1.5 pl-3 text-gray-900 text-sm md:text-md shadow-sm border-gray-300 placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:text-sm sm:leading-6"
                 onChange={(e)=>setSelectedObservation(e.target.value)}/>
             </div>
           </div>

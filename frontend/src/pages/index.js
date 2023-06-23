@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Fragment } from 'react'
 import CardCuadricula from 'i/components/CardCuadricula'
 import CardHorizontal from 'i/components/CardHorizontal'
 import Filters from 'i/components/Filters';
@@ -10,6 +10,8 @@ import $ from 'jquery';
 import Pagination from 'i/components/Pagination'
 import Navbar from 'i/components/Navbar'
 import Error404 from 'i/components/Error404';
+import {Dialog, Disclosure, Popover, Transition } from '@headlessui/react'
+
 
 /* function formattFilters(items){
   var filters = {};
@@ -177,39 +179,57 @@ function CarsView() {
       </Head>
       <Navbar></Navbar>
       <main className="flex flex-row justify-between">
-        <div className="hidden max-w-sm lg:block md:w-full md:px-[37px] ">
+        <div className="hidden max-w-sm lg:block md:w-full md:px-[35px] ">
           <Filters setFiltersApplied={setFiltersApplied} filtersApplied={filtersApplied} setModifiedFilter={setModifiedFilter}/>
         </div>
-        <div className="my-10 pl-6 pr-6 w-full lg:pl-0 lg:pr-14">
-          <div className='grid grid-cols-5 items-center lg:items-start'>
-            <div className="col-span-2 justify-self-center lg:col-span-4 lg:justify-self-start">
-              {filtersApplied.length > 0 && <div className='hidden lg:flex flex-row flex-wrap gap-y-2'>
+        <div className="my-5 px-6 w-full lg:pl-0 lg:pr-14">
+          <div className='grid grid-cols-9 lg:grid-cols-5 items-center justify-end lg:items-start'>
+            <div className="col-span-7 lg:col-span-4 justify-self-start">
+              {filtersApplied.length > 0 && <div className='flex flex-row flex-wrap gap-y-2'>
                 {filtersApplied.map((filter, index) => {
                   return <Badge key={index} data={filter} type={'filters-applied'} setFiltersApplied={setFiltersApplied} filtersApplied={filtersApplied} setModifiedFilter={setModifiedFilter}/>
                 })}
               </div>}
-              <button className="flex flex-row items-center gap-2 lg:hidden">
+              {/* <button className="flex flex-row items-center lg:gap-2 lg:hidden">
                 <svg width="17" height="18" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path fillRule="evenodd" clipRule="evenodd" d="M7.08333 2.125C5.702 2.125 4.37724 2.67373 3.40049 3.65049C2.42373 4.62724 1.875 5.952 1.875 7.33333C1.875 8.0173 2.00972 8.69457 2.27146 9.32648C2.5332 9.95838 2.91685 10.5325 3.40049 11.0162C3.88412 11.4998 4.45829 11.8835 5.09019 12.1452C5.72209 12.4069 6.39936 12.5417 7.08333 12.5417C7.7673 12.5417 8.44457 12.4069 9.07648 12.1452C9.70838 11.8835 10.2825 11.4998 10.7662 11.0162C11.2498 10.5325 11.6335 9.95838 11.8952 9.32648C12.1569 8.69457 12.2917 8.0173 12.2917 7.33333C12.2917 5.952 11.7429 4.62724 10.7662 3.65049C9.78943 2.67373 8.46467 2.125 7.08333 2.125ZM2.5166 2.7666C3.72777 1.55543 5.37048 0.875 7.08333 0.875C8.79619 0.875 10.4389 1.55543 11.6501 2.7666C12.8612 3.97777 13.5417 5.62048 13.5417 7.33333C13.5417 8.18145 13.3746 9.02127 13.0501 9.80483C12.8055 10.3952 12.4751 10.945 12.0706 11.4367L16.6919 16.0581C16.936 16.3021 16.936 16.6979 16.6919 16.9419C16.4479 17.186 16.0521 17.186 15.8081 16.9419L11.1867 12.3206C10.695 12.7251 10.1452 13.0555 9.55483 13.3001C8.77127 13.6246 7.93145 13.7917 7.08333 13.7917C6.23521 13.7917 5.3954 13.6246 4.61184 13.3001C3.82827 12.9755 3.11631 12.4998 2.5166 11.9001C1.91689 11.3004 1.44117 10.5884 1.11661 9.80483C0.79205 9.02127 0.625 8.18145 0.625 7.33333C0.625 5.62048 1.30543 3.97777 2.5166 2.7666Z" fill="#566DED"/>
                 </svg>
                 <p className="text-[#566DED] font-bold text-sm">Buscar</p>
-              </button>
+              </button> */}
             </div>
-            <hr className="col-span-1 justify-self-center rotate-90 w-5 bg-[#E3E5ED] lg:hidden"/>
-            <div className="col-span-2 justify-self-center lg:col-span-1 lg:justify-self-end">
-              {filtersApplied.length > 0 && <button className="hidden lg:flex flex-row pt-1 text-[#566DED] text-sm items-center gap-1" onClick={() => {getData('cars'); setFiltersApplied(new Array); setDataFiltered(data); setDataPaginated(data.slice(0,12)); setTotalItems(Object.keys(data).length)}}> 
+            <div className="col-span-2 lg:col-span-1 justify-self-end">
+              {filtersApplied.length > 0 && <button className="flex flex-row pt-1 text-[#566DED] text-sm items-center gap-1" onClick={() => {getData('cars'); setFiltersApplied(new Array); setDataFiltered(data); setDataPaginated(data.slice(0,12)); setTotalItems(Object.keys(data).length)}}> 
                 <svg width="16" height="18" viewBox="0 0 16 18" fill="#566DED" xmlns="http://www.w3.org/2000/svg">
                   <path fillRule="evenodd" clipRule="evenodd" d="M5.30212 1.30214C5.57561 1.02865 5.94654 0.875 6.33331 0.875H9.66665C10.0534 0.875 10.4244 1.02865 10.6978 1.30214C10.9713 1.57563 11.125 1.94656 11.125 2.33333V4.20833H14.6666C15.0118 4.20833 15.2916 4.48816 15.2916 4.83333C15.2916 5.17851 15.0118 5.45833 14.6666 5.45833H14.4153L13.7342 14.996C13.7342 14.9961 13.7342 14.996 13.7342 14.996C13.693 15.5742 13.4343 16.1153 13.0102 16.5103C12.586 16.9054 12.0279 17.125 11.4483 17.125H4.55166C3.97203 17.125 3.41393 16.9054 2.98976 16.5103C2.56563 16.1153 2.30692 15.5743 2.26573 14.9962C2.26573 14.9961 2.26574 14.9962 2.26573 14.9962L1.58468 5.45833H1.33331C0.988135 5.45833 0.708313 5.17851 0.708313 4.83333C0.708313 4.48816 0.988135 4.20833 1.33331 4.20833H4.87498V2.33333C4.87498 1.94656 5.02863 1.57563 5.30212 1.30214ZM6.12498 4.20833H9.87498V2.33333C9.87498 2.27808 9.85303 2.22509 9.81396 2.18602C9.77489 2.14695 9.7219 2.125 9.66665 2.125H6.33331C6.27806 2.125 6.22507 2.14695 6.186 2.18602C6.14693 2.22509 6.12498 2.27808 6.12498 2.33333V4.20833ZM2.83787 5.45833L3.51256 14.9072C3.53127 15.17 3.64887 15.416 3.84168 15.5956C4.03448 15.7752 4.28816 15.875 4.55165 15.875H11.4483C11.7118 15.875 11.9655 15.7752 12.1583 15.5956C12.3511 15.416 12.4687 15.1701 12.4874 14.9073L13.1621 5.45833H2.83787ZM6.33331 7.54167C6.67849 7.54167 6.95831 7.82149 6.95831 8.16667V13.1667C6.95831 13.5118 6.67849 13.7917 6.33331 13.7917C5.98813 13.7917 5.70831 13.5118 5.70831 13.1667V8.16667C5.70831 7.82149 5.98813 7.54167 6.33331 7.54167ZM9.66665 7.54167C10.0118 7.54167 10.2916 7.82149 10.2916 8.16667V13.1667C10.2916 13.5118 10.0118 13.7917 9.66665 13.7917C9.32147 13.7917 9.04165 13.5118 9.04165 13.1667V8.16667C9.04165 7.82149 9.32147 7.54167 9.66665 7.54167Z" fill="#566DED"/>
                 </svg>
                 Clear filters
               </button>}
-              <button className="flex flex-row items-center gap-2 lg:hidden">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M3.24998 0.708328C3.59516 0.708328 3.87498 0.98815 3.87498 1.33333V9.12853C4.24794 9.23427 4.59145 9.43389 4.87043 9.71288C5.3002 10.1426 5.54165 10.7255 5.54165 11.3333C5.54165 11.9411 5.3002 12.524 4.87043 12.9538C4.59145 13.2328 4.24794 13.4324 3.87498 13.5381V14.6667C3.87498 15.0118 3.59516 15.2917 3.24998 15.2917C2.9048 15.2917 2.62498 15.0118 2.62498 14.6667V13.5381C2.25202 13.4324 1.90851 13.2328 1.62953 12.9538C1.19976 12.524 0.958313 11.9411 0.958313 11.3333C0.958313 10.7255 1.19976 10.1426 1.62953 9.71288C1.90851 9.43389 2.25202 9.23427 2.62498 9.12853V1.33333C2.62498 0.98815 2.9048 0.708328 3.24998 0.708328ZM8.24998 0.708328C8.59516 0.708328 8.87498 0.98815 8.87498 1.33333V2.46186C9.24794 2.5676 9.59145 2.76722 9.87043 3.04621C10.3002 3.47598 10.5416 4.05887 10.5416 4.66666C10.5416 5.27445 10.3002 5.85734 9.87043 6.28711C9.59145 6.5661 9.24794 6.76572 8.87498 6.87146V14.6667C8.87498 15.0118 8.59516 15.2917 8.24998 15.2917C7.9048 15.2917 7.62498 15.0118 7.62498 14.6667V6.87146C7.25202 6.76572 6.90851 6.5661 6.62953 6.28711C6.19976 5.85734 5.95831 5.27445 5.95831 4.66666C5.95831 4.05887 6.19976 3.47598 6.62953 3.04621C6.90851 2.76722 7.25202 2.5676 7.62498 2.46186V1.33333C7.62498 0.98815 7.9048 0.708328 8.24998 0.708328ZM13.25 0.708328C13.5952 0.708328 13.875 0.98815 13.875 1.33333V9.12853C14.2479 9.23427 14.5914 9.43389 14.8704 9.71288C15.3002 10.1426 15.5416 10.7255 15.5416 11.3333C15.5416 11.9411 15.3002 12.524 14.8704 12.9538C14.5914 13.2328 14.2479 13.4324 13.875 13.5381V14.6667C13.875 15.0118 13.5952 15.2917 13.25 15.2917C12.9048 15.2917 12.625 15.0118 12.625 14.6667V13.5381C12.252 13.4324 11.9085 13.2328 11.6295 12.9538C11.1998 12.524 10.9583 11.9411 10.9583 11.3333C10.9583 10.7255 11.1998 10.1426 11.6295 9.71288C11.9085 9.43389 12.252 9.23427 12.625 9.12853V1.33333C12.625 0.98815 12.9048 0.708328 13.25 0.708328ZM8.24998 3.62499C7.97371 3.62499 7.70876 3.73474 7.51341 3.93009C7.31806 4.12544 7.20831 4.39039 7.20831 4.66666C7.20831 4.94293 7.31806 5.20788 7.51341 5.40323C7.70876 5.59858 7.97371 5.70833 8.24998 5.70833C8.52625 5.70833 8.7912 5.59858 8.98655 5.40323C9.1819 5.20788 9.29165 4.94293 9.29165 4.66666C9.29165 4.39039 9.1819 4.12544 8.98655 3.93009C8.7912 3.73474 8.52625 3.62499 8.24998 3.62499ZM3.24998 10.2917C2.97371 10.2917 2.70876 10.4014 2.51341 10.5968C2.31806 10.7921 2.20831 11.0571 2.20831 11.3333C2.20831 11.6096 2.31806 11.8745 2.51341 12.0699C2.70876 12.2652 2.97371 12.375 3.24998 12.375C3.52625 12.375 3.7912 12.2652 3.98655 12.0699C4.1819 11.8745 4.29165 11.6096 4.29165 11.3333C4.29165 11.0571 4.1819 10.7921 3.98655 10.5968C3.7912 10.4014 3.52625 10.2917 3.24998 10.2917ZM13.25 10.2917C12.9737 10.2917 12.7088 10.4014 12.5134 10.5968C12.3181 10.7921 12.2083 11.0571 12.2083 11.3333C12.2083 11.6096 12.3181 11.8745 12.5134 12.0699C12.7088 12.2652 12.9737 12.375 13.25 12.375C13.5262 12.375 13.7912 12.2652 13.9865 12.0699C14.1819 11.8745 14.2916 11.6096 14.2916 11.3333C14.2916 11.0571 14.1819 10.7921 13.9865 10.5968C13.7912 10.4014 13.5262 10.2917 13.25 10.2917Z" fill="#566DED"/>
-                </svg>
-                <p className="text-[#566DED] font-bold text-sm">Filtrar</p>
-              </button>
             </div>
+            <Popover.Group className="col-span-5 flex gap-x-12 justify-center border-y border-gray-200 mt-4 lg:hidden">
+              <Popover className="relative w-full">
+                <Popover.Button className="flex w-full justify-center items-center text-sm font-semibold text-gray-900 focus:outline-none">
+                  <div className='flex flex-row py-3 items-center'>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#566DED" className="w-5 h-5 mr-1">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
+                    </svg>
+                    <p className=" text-[#566DED] font-bold text-sm">Filtrar</p>
+                  </div>
+                </Popover.Button>
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-200"
+                  enterFrom="opacity-0 translate-y-1"
+                  enterTo="opacity-100 translate-y-0"
+                  leave="transition ease-in duration-150"
+                  leaveFrom="opacity-100 translate-y-0"
+                  leaveTo="opacity-0 translate-y-1"
+                >
+                  <Popover.Panel className="absolute left-1/2 transform -translate-x-1/2 z-20 px-8 w-[400px] max-w-md overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-gray-900/5">
+                      <Filters setFiltersApplied={setFiltersApplied} filtersApplied={filtersApplied} setModifiedFilter={setModifiedFilter}/>
+                  </Popover.Panel>
+                </Transition>
+              </Popover>
+            </Popover.Group>
           </div>
           <div className='flex flex-row items-center pt-5 pb-2 justify-between'>
             <div className="">
